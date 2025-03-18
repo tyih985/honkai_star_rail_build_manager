@@ -9,7 +9,7 @@ Our project is focused on the game, Honkai: Star Rail. More specifically, it aim
 - Add Milestone 2 examples and tables into the SQL initialization script file:  Angela
 - Add any description of triggers or assertions needed to implement additional constraints: Tyler
 - Create `INSERT`, `UPDATE`, `DELETE`, `SELECTION` , `PROJECTION` , `JOIN` queries → 2 queries each
-- Create `Aggregation with GROUP BY` , `Aggregation with HAVING` , `Nested aggregation with GROUP BY` , `Division` queries: 1 query each, `DIVISION` by Tyler/Angela
+- Create `Aggregation with GROUP BY` , `Aggregation with HAVING` , `Nested aggregation with GROUP BY` queries: 1 query each, `DIVISION` by Tyler/Angela
 - Add descriptions on what queries 7-10 do: Description written by member that writes query
 - Review that all queries are not subsets of each other and are linked correctly to where it is in the code: Stephanie
 - Review that all queries make sense in the context of the project and are meaningful: Stephanie
