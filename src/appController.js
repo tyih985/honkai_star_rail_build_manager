@@ -64,5 +64,27 @@ router.get('/count-demotable', async (req, res) => {
     }
 });
 
+// HSR Build Manager Endpoints
+router.get('/characters', async (req, res) => {
+    const tableContent = await appService.fetchCharactersFromDb();
+    res.json({data: tableContent});
+});
+
+router.get('/characters/:name', async (req, res) => {
+    const name = decodeURIComponent(req.params.name);
+    console.log(name);
+    const details = await appService.fetchCharacterDetailFromDb(name);
+    const stats = await appService.fetchCharacterStatsFromDb(name);
+    const materials = await appService.fetchCharMaterialsFromDb(name);
+    console.log(details, stats, materials);
+    res.json({
+        data: {
+            details: details,
+            stats: stats,
+            materials: materials
+        }
+    })
+});
+
 
 module.exports = router;

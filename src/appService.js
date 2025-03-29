@@ -142,11 +142,65 @@ async function countDemotable() {
     });
 }
 
+// HSR Build Functions
+async function fetchCharactersFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT * FROM CHARACTERS');
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function fetchCharacterDetailFromDb(name) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'SELECT path FROM CHARACTERS WHERE name=:name',
+            [name]
+        );
+        return result.rows[0][0];
+    }).catch(() => {
+        return [];
+    })
+}
+
+async function fetchCharacterStatsFromDb(name) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT s.stat_type, s.stat_value 
+            FROM Stats s, CharacterRelations c
+            WHERE s.cid = c.cid AND c.name=:name
+        `, [name]);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    }) 
+}
+
+async function fetchCharMaterialsFromDb(name) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT md.name
+            FROM MaterialDetails md, Characters_Materials cm, Materials m
+            WHERE m.mid = cm.mid AND m.name = md.name AND cm.cid = (SELECT cid
+                                                                    FROM CharacterRelations
+                                                                    WHERE name=:name)
+        `, [name]);
+        return result.rows[0];
+    }).catch(() => {
+        return [];
+    }) 
+}
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
     initiateDemotable, 
     insertDemotable, 
     updateNameDemotable, 
-    countDemotable
+    countDemotable,
+    fetchCharactersFromDb,
+    fetchCharacterDetailFromDb,
+    fetchCharacterStatsFromDb,
+    fetchCharMaterialsFromDb
 };

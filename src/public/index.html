@@ -1,85 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <!-- This meta tag ensures that the website renders correctly across different device sizes, enhancing mobile responsiveness. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Link to the external CSS stylesheet. Uncomment if you wish to customize or add styling. -->
-    <!-- <link rel="stylesheet" href="styles.css">   -->
-
-    <title>Database Application</title>
+    <title>Honkai: Star Rail Build Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <!-- ===================================================================================== -->
-    <!-- Display the current status of the database connection. 
-         !!HERE TO HELP U DEBUGGING, NOT REQUIRED IN YOUR OWN PROJECT!!
-         -->
-    <h1>Database Connection Status: 
-        <!-- An in-line placeholder to display connection status. -->
-        <span id="dbStatus"> </span>
-        <!-- A loading GIF, will be hided once get the status. -->
-        <img id="loadingGif" class="loading-gif" src="loading_100px.gif" alt="Loading...">
-    </h1>
 
-    <br><hr><br> <!-- ========================================================================= -->
+<body class="bg-gray-50 font-sans">
 
-    <!-- Show 'Demotable'. 
-        Data will be fetched and inserted here dynamically using JavaScript. -->
-    <h2>Show Demotable</h2>
-    <table id="demotable" border="1">
-        <thead>
-            <tr>
-                <!--Table head, need to be adjusted accordingly to align with your own.-->
-                <th>ID</th>
-                <th>Name</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <!-- Navigation -->
+    <nav class="flex justify-end p-4 bg-white shadow-sm space-x-4 text-sm">
+        <a href="#" class="font-semibold text-indigo-600">my builds</a>
+        <a href="char_list.html" class="hover:underline">characters</a>
+        <a href="#" class="hover:underline">light cones</a>
+        <a href="#" class="hover:underline">relics</a>
+    </nav>
 
-    <br><hr><br> <!-- ========================================================================= -->
+    <main class="max-w-5xl mx-auto py-10 space-y-8">
 
-    <h2>Reset Demotable</h2>
-    <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
-    <button id="resetDemotable"> reset </button> <br>
-    <!-- A placeholder to display messages related to the reset operation. -->
-    <div id="resetResultMsg"></div>
+        <!-- Title -->
+        <h1 class="text-2xl font-semibold">My Builds</h1>
 
-    <br><hr><br> <!-- ========================================================================= -->
+        <!-- Build List -->
+        <section class="space-y-4">
 
-    <h2> Insert Values into DemoTable </h2>
-    <form id="insertDemotable">
-        ID: <input type="number" id="insertId" placeholder="Enter ID" required> <br><br>
-        Name: <input type="text" id="insertName" placeholder="Enter Name" maxlength="20"> <br><br>
+            <!-- Example Build Card -->
+            <div class="bg-white rounded-xl shadow p-4 relative">
 
-        <button type="submit"> insert </button> <br>
-    </form>
-    <div id="insertResultMsg"></div>
+                <!-- Edit / Delete icons -->
+                <div class="absolute top-4 right-4 space-x-2">
+                    <button title="Edit" class="text-gray-500 hover:text-indigo-600">
+                        ✏️
+                    </button>
+                    <button title="Delete" class="text-gray-500 hover:text-red-600">
+                        🗑️
+                    </button>
+                </div>
 
-    <br><hr><br> <!-- ========================================================================= -->
+                <!-- Build Info Table -->
+                <table class="w-full text-left text-sm mt-4">
+                    <thead class="bg-gray-100 rounded">
+                        <tr>
+                            <th class="p-2">Build Name</th>
+                            <th class="p-2">Character</th>
+                            <th class="p-2">Light Cone</th>
+                            <th class="p-2">Head</th>
+                            <th class="p-2">Body</th>
+                            <th class="p-2">Feet</th>
+                            <th class="p-2">Link Rope</th>
+                            <th class="p-2">Planar Sphere</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-2 font-semibold">Ultimate DPS</td>
+                            <td class="p-2">Kafka</td>
+                            <td class="p-2">Patience is All You Need</td>
+                            <td class="p-2">Headpiece X</td>
+                            <td class="p-2">Bodypiece Y</td>
+                            <td class="p-2">Feetpiece Z</td>
+                            <td class="p-2">Link Rope A</td>
+                            <td class="p-2">Planar Sphere B</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-    <h2>Update Name in DemoTable</h2>
-    <p>The values are case sensitive and if you enter in the wrong case, the update statement will not do anything.</p>
-    <form id="updataNameDemotable">
-        Old Name: <input type="text" id="updateOldName" placeholder="Enter Old Name" required> <br><br>
-        New Name: <input type="text" id="updateNewName" placeholder="Enter New Name" maxlength="20"> <br><br>
+            </div>
 
-        <button type="submit"> update </button> <br>
-    </form>
-    <!-- A placeholder to display messages related to the update operation. -->
-    <div id="updateNameResultMsg"></div>
+            <!-- Repeat above card for other builds -->
+            <div class="bg-white rounded-xl shadow p-4 h-24 flex items-center justify-center text-gray-400">Empty Build Slot</div>
+            <div class="bg-white rounded-xl shadow p-4 h-24 flex items-center justify-center text-gray-400">Empty Build Slot</div>
 
-    <br><hr><br> <!-- ========================================================================= -->
+        </section>
 
-    <h2>Count the Tuples in DemoTable</h2>
-    <button id="countDemotable"> count </button> <br><br>
-    <!-- A placeholder to display the count result. -->
-    <div id="countResultMsg"></div> <br>
+        <!-- New Build Button -->
+        <div class="flex justify-center">
+            <button class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">
+                <span>new build</span>
+                <span class="text-xl font-bold">+</span>
+            </button>
+        </div>
 
-    <!-- ===================================================================================== -->
-    <!-- External JavaScript file that contains the functionality/logic for the operations above. -->
-    <script src="scripts.js"></script>
+    </main>
+
 </body>
+
 </html>

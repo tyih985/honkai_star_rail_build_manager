@@ -155,20 +155,55 @@ async function countDemotable() {
 }
 
 
+// Fetches data from Characters table and displays it
+async function fetchAndDisplayCharacters() {
+    const response = await fetch('/characters', {
+        method: 'GET'
+    });
+    const responseData = await response.json();
+    const characters = responseData.data;
+    console.log(characters);
+  
+    const container = document.getElementById("characters");
+  
+    characters.forEach(char => {
+        const card = document.createElement("a");
+        card.href = `character.html?name=${encodeURIComponent(char[0])}`;
+        card.className = `
+            block bg-white rounded-xl shadow p-4 hover:shadow-md transition
+            hover:ring-1 hover:ring-indigo-400 cursor-pointer space-y-2
+        `;
+
+        card.innerHTML = `
+            <div class="w-full aspect-square bg-gray-200 rounded mb-2"></div>
+            <h2 class="text-lg font-semibold">${char[0]}</h2>
+            <p class="text-sm text-gray-600"><strong>Element:</strong> ${char[1]}</p>
+            <p class="text-sm text-gray-600"><strong>Path:</strong> ${char[3]}</p>
+            <p class="text-sm text-yellow-500">${'★'.repeat(char[2])}</p>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+
+
+
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
 window.onload = function() {
     checkDbConnection();
     fetchTableData();
-    document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
-    document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
-    document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
-    document.getElementById("countDemotable").addEventListener("click", countDemotable);
+    // document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
+    // document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
+    // document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
+    // document.getElementById("countDemotable").addEventListener("click", countDemotable);
 };
 
 // General function to refresh the displayed table data. 
 // You can invoke this after any table-modifying operation to keep consistency.
 function fetchTableData() {
-    fetchAndDisplayUsers();
+    fetchAndDisplayCharacters();
 }
