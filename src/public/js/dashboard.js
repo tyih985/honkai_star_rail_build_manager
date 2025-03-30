@@ -99,7 +99,7 @@ async function updateBuildName(event) {
         });
 
         if (!res.ok) {
-            showToast("Build with that name already exits.", "error");
+            showToast("Build with that name already exists.", "error");
             return;
         }
 
