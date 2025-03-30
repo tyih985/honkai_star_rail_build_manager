@@ -195,7 +195,7 @@ async function fetchCharMaterialsFromDb(name) {
 async function fetchBuildsDetailsFromDb() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
-            SELECT b.bid, b.name, cr.name, lc.name
+            SELECT b.bid, b.name, cr.name, lc.name, b.playstyle
             FROM Builds b, CharacterRelations cr, Builds_LightCones blc, LightCones lc
             WHERE b.bid = cr.bid AND blc.bid = b.bid AND blc.cone_id = lc.cone_id
         `);
@@ -257,11 +257,11 @@ async function insertBuild(bid, b_name, cone_id, lc_name, cid, c_name, rid, reli
 
 }
 
-async function updateNameBuild(bid, newName) {
+async function updateNameBuild(bid, newName, newPlaystyle) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `UPDATE Builds SET name=:newName where bid=:bid`,
-            [newName, bid],
+            `UPDATE Builds SET name=:newName, playstyle=:newPlaystyle WHERE bid=:bid`,
+            [newName, newPlaystyle, bid],
             { autoCommit: true }
         );
 

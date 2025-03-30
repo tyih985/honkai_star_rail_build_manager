@@ -86,5 +86,33 @@ router.get('/characters/:name', async (req, res) => {
     })
 });
 
+router.get('/builds', async (req, res) => {
+    const tableContent = await appService.fetchBuildsDetailsFromDb();
+    res.json({data: tableContent});
+});
+
+
+router.delete('/builds/:bid', async (req, res) => {
+    const bid = decodeURIComponent(req.params.bid);
+    const deleteResult = await appService.deleteBuild(bid);
+    if (deleteResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false })
+    }
+});
+
+router.put('/builds/:bid', async (req, res) => {
+    const bid = decodeURIComponent(req.params.bid);
+    const { name, playstyle } = req.body;
+    const updateResult = await appService.updateNameBuild(bid, name, playstyle);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+
 
 module.exports = router;

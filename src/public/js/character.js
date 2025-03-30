@@ -11,19 +11,6 @@ async function fetchAndDisplayCharacter() {
     const responseData = await response.json();
     const char = responseData.data;
 
-    const db = {
-      "March 7th": {
-        info: { element: "Ice", rarity: 4, path: "The Preservation" },
-        stats: { HP: 1058, ATK: 511, DEF: 573, SPD: 101, Taunt: 150 },
-        materials: ["Oath of Steel", "Tracks of Destiny"]
-      },
-      "Dan Heng": {
-        info: { element: "Wind", rarity: 4, path: "The Hunt" },
-        stats: { HP: 902, ATK: 640, DEF: 398, SPD: 109, Taunt: 75 },
-        materials: ["Squirming Core", "Sparse Aether"]
-      }
-    };
-
     if (char) {
       document.getElementById('char-path').innerText = char.details;
 
