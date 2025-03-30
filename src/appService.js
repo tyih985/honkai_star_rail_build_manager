@@ -192,6 +192,25 @@ async function fetchCharMaterialsFromDb(name) {
     }) 
 }
 
+async function fetchBuildsDetailsFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT b.bid, b.name, cr.name, lc.name
+            FROM Builds b, CharacterRelations cr, Builds_LightCones blc, LightCones lc
+            WHERE b.bid = cr.bid AND blc.bid = b.bid AND blc.cone_id = lc.cone_id
+        `);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    })
+}
+
+async function fetchBuildRelicsFromDb(bid) {
+    // TODO
+    return;
+}
+
+
 async function insertBuild(bid, b_name, cone_id, lc_name, cid, c_name, rid, relic_level, r_name, main_stat, rarity, rec_main, rec_ss) {
     return await withOracleDB(async (connection) => {
         // Insert into Builds
@@ -238,11 +257,11 @@ async function insertBuild(bid, b_name, cone_id, lc_name, cid, c_name, rid, reli
 
 }
 
-async function updateNameBuild(oldName, newName) {
+async function updateNameBuild(bid, newName) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `UPDATE Build SET name=:newName where name=:oldName`,
-            [newName, oldName],
+            `UPDATE Builds SET name=:newName where bid=:bid`,
+            [newName, bid],
             { autoCommit: true }
         );
 
@@ -281,6 +300,7 @@ module.exports = {
     fetchCharacterDetailFromDb,
     fetchCharacterStatsFromDb,
     fetchCharMaterialsFromDb,
+    fetchBuildsDetailsFromDb,
     insertBuild,
     updateNameBuild,
     deleteBuild

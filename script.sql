@@ -4,6 +4,8 @@ drop table LightCones_Materials;
 drop table Abilities_Materials;
 drop table Characters_Materials;
 drop table Characters_Consumables;
+drop table Builds_Relics;
+drop table Builds_LightCones;
 drop table Relics;
 drop table RelicDetails;
 drop table RelicSet;
@@ -34,7 +36,8 @@ create table Characters (
     
 create table Builds (
     bid number not null,
-    name varchar2(100),
+    name varchar2(100) unique,
+    playstyle varchar2(100),
     primary key (bid)
 );
 
@@ -49,10 +52,8 @@ create table LightConeDetails (
 create table LightCones (
     cone_id number not null,
     name varchar2(100),
-    bid number,
     primary key (cone_id),
-    foreign key (name) references LightConeDetails on delete cascade,
-    foreign key (bid) references Builds
+    foreign key (name) references LightConeDetails on delete cascade
 );
 
 create table CharacterRelations (
@@ -167,13 +168,28 @@ create table Relics (
     name varchar2(100) not null,
     main_stat varchar2(30),
     rarity number,
-    bid number,
-    rec_main varchar2(100),
-    rec_substat varchar2(100),
     primary key (rid),
-    foreign key (bid) references Builds on delete set null,
     foreign key (name) references RelicDetails on delete cascade
 );
+
+create table Builds_LightCones (
+    bid number,
+    cone_id number,
+    primary key (bid, cone_id),
+    foreign key (bid) references Builds on delete cascade,
+    foreign key (cone_id) references LightCones
+);
+
+create table Builds_Relics (
+    bid number,
+    rid number,
+    rec_main varchar2(100),
+    rec_substat varchar2(100),
+    primary key (bid, rid),
+    foreign key (bid) references Builds on delete cascade,
+    foreign key (rid) references Relics 
+);
+
 
 create table Characters_Consumables (
     name varchar2(100),
@@ -224,6 +240,14 @@ insert into Characters(name, element, rarity, path) values ('Dan Heng', 'Wind', 
 insert into Characters(name, element, rarity, path) values ('Himeko', 'Fire', 5, 'The Erudition');
 insert into Characters(name, element, rarity, path) values ('Asta', 'Fire', 4, 'The Harmony');
 
+-- Builds
+insert into Builds(bid, name, playstyle) values (0, 'Destruction MC DPS', 'Crit DPS');
+insert into Builds(bid, name, playstyle) values (1, 'Himeko PF', 'Break Support');
+insert into Builds(bid, name, playstyle) values (2, 'Dan Heng Build', 'Speed DPS');
+insert into Builds(bid, name, playstyle) values (3, 'Asta Support', 'Speed Support');
+insert into Builds(bid, name, playstyle) values (4, 'March build', 'Freeze Tank');
+
+
 -- Light Cone Details
 insert into LightConeDetails(name, rarity, path, effect) values 
 ('Something Irreplaceable', 5, 'The Destruction', 'Kinship -- Increases the wearer''s ATK by 24/28/32/36/40%. When the wearer defeats an enemy or is hit, immediately restores HP equal to 8/9/10/11/12% of the wearer''s ATK. At the same time, the wearer''s DMG is increased by 24/28/32/36/40% until the end of their next turn. This effect cannot stack and can only trigger 1 time per turn.');
@@ -237,27 +261,23 @@ insert into LightConeDetails(name, rarity, path, effect) values
 ('Meshing Cogs', 3, 'The Harmony', 'Fleet Triumph -- After the wearer uses attacks or gets hit, additionally regenerates 4/5/6/7/8 Energy. This effect can only be triggered 1 time per turn.');
 
 -- LightCones
-insert into LightCones(cone_id, name, bid) values (0, 'Something Irreplaceable', NULL);
-insert into LightCones(cone_id, name, bid) values (1, 'Moment of Victory', NULL);
-insert into LightCones(cone_id, name, bid) values (2, 'Swordplay', NULL);
-insert into LightCones(cone_id, name, bid) values (3, 'Night on the Milky Way', NULL);
-insert into LightCones(cone_id, name, bid) values (4, 'Meshing Cogs', NULL);
+insert into LightCones(cone_id, name) values (0, 'Something Irreplaceable');
+insert into LightCones(cone_id, name) values (1, 'Moment of Victory');
+insert into LightCones(cone_id, name) values (2, 'Swordplay');
+insert into LightCones(cone_id, name) values (3, 'Night on the Milky Way');
+insert into LightCones(cone_id, name) values (4, 'Meshing Cogs');
 
 -- CharacterRelations
 insert into CharacterRelations(cid, name, cone_id, bid) values 
-(0, 'Trailblazer', NULL, NULL);
-
+(0, 'Trailblazer', NULL, 0);
 insert into CharacterRelations(cid, name, cone_id, bid) values 
-(1, 'March 7th', NULL, NULL);
-
+(1, 'March 7th', NULL, 4);
 insert into CharacterRelations(cid, name, cone_id, bid) values 
-(2, 'Dan Heng', NULL, NULL);
-
+(2, 'Dan Heng', NULL, 2);
 insert into CharacterRelations(cid, name, cone_id, bid) values 
-(3, 'Himeko', NULL, NULL);
-
+(3, 'Himeko', NULL, 1);
 insert into CharacterRelations(cid, name, cone_id, bid) values 
-(4, 'Asta', NULL, NULL);
+(4, 'Asta', NULL, 3);
 
 -- Stats for March 7th (cid = 1)
 insert into Stats(sid, stat_type, stat_value, cid) values (10, 'HP', 1058, 1);
@@ -372,6 +392,28 @@ insert into RelicDetails(name, relic_type, set_name) values ('Champion''s Chest 
 insert into RelicDetails(name, relic_type, set_name) values ('Knight''s Iron Boots of Order', 'Feet', 'Knight of Purity Palace');
 insert into RelicDetails(name, relic_type, set_name) values ('Sigonia''s Knot of Cyclicality', 'Link Rope', 'Sigonia, the Unclaimed Desolation');
 insert into RelicDetails(name, relic_type, set_name) values ('Taikiyan Laser Stadium', 'Planar Sphere', 'Rutilant Arena');
+
+-- Relics 
+insert into Relics(rid, relic_level, name, main_stat, rarity) values (0, 10, 'Grand Duke''s Crown of Netherflame', 'HP', 5);
+insert into Relics(rid, relic_level, name, main_stat, rarity) values (1, 13, 'Champion''s Chest Guard', 'CRIT DMG', 5);
+insert into Relics(rid, relic_level, name, main_stat, rarity) values (2, 1, 'Knight''s Iron Boots of Order', 'ATK%', 3);
+insert into Relics(rid, relic_level, name, main_stat, rarity) values (3, 14, 'Sigonia''s Knot of Cyclicality', 'Energy Regen', 4);
+insert into Relics(rid, relic_level, name, main_stat, rarity) values (4, 12, 'Taikiyan Laser Stadium', 'HP%', 5);
+
+-- Builds_Relics
+insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (1, 0, 'HP', 'CRIT Rate, CRIT DMG, ATK%');
+insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (0, 1, 'HP', 'ATK%, CRIT Rate, CRIT DMG, SPD');
+insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (4, 2, 'SPD, DEF%', 'Effect Hit Rate, DEF%, SPD, HP%');
+insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (1, 3, 'ATK%', 'CRIT Rate, CRIT DMG, SPD');
+insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (2, 4, 'ATK%', 'CRIT Rate, CRIT DMG, ATK%, SPD');
+
+
+-- Builds_LightCones
+insert into Builds_LightCones(bid, cone_id) values (0, 0);  
+insert into Builds_LightCones(bid, cone_id) values (1, 3);  
+insert into Builds_LightCones(bid, cone_id) values (2, 2);  
+insert into Builds_LightCones(bid, cone_id) values (3, 4);  
+insert into Builds_LightCones(bid, cone_id) values (4, 1);  
 
 -- Characters_Consumables
 insert into Characters_Consumables(name, cid) values ('Alfalfa Salad', 0);
