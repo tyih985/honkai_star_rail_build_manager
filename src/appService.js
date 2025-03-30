@@ -288,6 +288,57 @@ async function deleteBuild(bid) {
     });
 }
 
+async function searchCharacter(search) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `SELECT * FROM Characters WHERE name LIKE %:search%`,
+                { search },
+                { autoCommit: true }
+            );
+
+            return result.rows[0][0];
+        } catch (error) {
+            console.error("Search Error:", error);
+            return -1;
+        }
+    });
+}
+
+async function searchLightCones(search) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `SELECT * FROM LightConeDetails WHERE name LIKE %:search%`,
+                { search },
+                { autoCommit: true }
+            );
+
+            return result.rows[0][0];
+        } catch (error) {
+            console.error("Search Error:", error);
+            return -1;
+        }
+    });
+}
+
+async function searchRelics(search) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `SELECT * FROM RelicDetails WHERE name LIKE %:search%`,
+                { search },
+                { autoCommit: true }
+            );
+
+            return result.rows[0][0];
+        } catch (error) {
+            console.error("Search Error:", error);
+            return -1;
+        }
+    });
+}
+
 
 module.exports = {
     testOracleConnection,
@@ -303,5 +354,8 @@ module.exports = {
     fetchBuildsDetailsFromDb,
     insertBuild,
     updateNameBuild,
-    deleteBuild
+    deleteBuild,
+    searchCharacter,
+    searchLightCones,
+    searchRelics
 };

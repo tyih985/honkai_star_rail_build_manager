@@ -113,6 +113,30 @@ router.put('/builds/:bid', async (req, res) => {
     }
 });
 
+router.get('/characters/:name', async (req, res) => {
+    const bid = decodeURIComponent(req.params.name);
+    const tableContent = await appService.searchCharacter(search);
+    res.json({data: tableContent});
+});
+
+router.get('/characters/:search', async (req, res) => {
+    const bid = decodeURIComponent(req.params.search);
+    const tableContent = await appService.searchCharacter(search);
+    res.json({data: tableContent});
+});
+
+router.get('/lightcones/:search', async (req, res) => {
+    const bid = decodeURIComponent(req.params.search);
+    const tableContent = await appService.searchLightCones(search);
+    res.json({data: tableContent});
+});
+
+router.get('/relics/:search', async (req, res) => {
+    const bid = decodeURIComponent(req.params.search);
+    const tableContent = await appService.searchRelics(search);
+    res.json({data: tableContent});
+});
+
 
 
 module.exports = router;
