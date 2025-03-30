@@ -192,6 +192,84 @@ async function fetchCharMaterialsFromDb(name) {
     }) 
 }
 
+async function insertBuild(bid, b_name, cone_id, lc_name, cid, c_name, rid, relic_level, r_name, main_stat, rarity, rec_main, rec_ss) {
+    return await withOracleDB(async (connection) => {
+        // Insert into Builds
+        const buildResult = await connection.execute(
+            `INSERT INTO Builds (bid, name) VALUES (:bid, :name)`,
+            [bid, b_name],
+            { autoCommit: false } 
+        );
+
+        // Insert into LightCones
+        const lightConeResult = await connection.execute(
+            `INSERT INTO LightCones (cone_id, name, bid) VALUES (:cone_id, :name, :bid)`,
+            [cone_id, lc_name, bid],
+            { autoCommit: false }
+        );
+
+        // Insert into CharacterRelations
+        const charRelationResult = await connection.execute(
+            `INSERT INTO CharacterRelations (cid, name, cone_id, bid) VALUES (:cid, :name, :cone_id, :bid)`,
+            [cid, c_name, cone_id, bid],
+            { autoCommit: false }
+        );
+
+        // Insert into Relics
+        const relicsResult = await connection.execute(
+            `INSERT INTO Relics (rid, relic_level, name, main_stat, rarity, bid, rec_main, rec_substat) VALUES (:rid, :relic_level, :name, :main_stat, :rarity, :bid, :rec_main, :rec_substat)`,
+            [rid, relic_level, r_name, main_stat, rarity, bid, rec_main, rec_ss],
+            { autoCommit: false }
+        );
+
+        // Commit the transaction only if all queries succeed
+        await connection.commit();
+
+        return (
+            buildResult.rowsAffected > 0 &&
+            lightConeResult.rowsAffected > 0 &&
+            charRelationResult.rowsAffected > 0 &&
+            relicsResult.rowsAffected > 0
+        );
+
+    }).catch(() => {
+        return false;
+    });
+
+}
+
+async function updateNameBuild(oldName, newName) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `UPDATE Build SET name=:newName where name=:oldName`,
+            [newName, oldName],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function deleteBuild(bid) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                `DELETE FROM Builds WHERE bid = :bid`,
+                { bid },
+                { autoCommit: true }
+            );
+
+            return result.rowsAffected > 0;
+        } catch (error) {
+            console.error("Delete Error:", error);
+            return false;
+        }
+    });
+}
+
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
@@ -202,5 +280,8 @@ module.exports = {
     fetchCharactersFromDb,
     fetchCharacterDetailFromDb,
     fetchCharacterStatsFromDb,
-    fetchCharMaterialsFromDb
+    fetchCharMaterialsFromDb,
+    insertBuild,
+    updateNameBuild,
+    deleteBuild
 };
