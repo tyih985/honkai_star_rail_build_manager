@@ -288,6 +288,21 @@ async function deleteBuild(bid) {
     });
 }
 
+async function fetchBuildMaterialsFromDb(bid) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT md.name
+            FROM MaterialDetails md, Characters_Materials cm, Materials m
+            WHERE m.mid = cm.mid AND m.name = md.name AND cm.cid = (SELECT cid
+                                                                    FROM CharacterRelations
+                                                                    WHERE name=:name)
+        `, [name]);
+        return result.rows[0];
+    }).catch(() => {
+        return [];
+    }) 
+}
+
 async function searchCharacter(search) {
     return await withOracleDB(async (connection) => {
         try {
