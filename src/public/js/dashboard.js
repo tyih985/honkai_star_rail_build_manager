@@ -99,7 +99,8 @@ async function updateBuildName(event) {
         });
 
         if (!res.ok) {
-            showToast("Rename failed.", "error");
+            showToast("Build with that name already exits.", "error");
+            return;
         }
 
         // Update name in UI
