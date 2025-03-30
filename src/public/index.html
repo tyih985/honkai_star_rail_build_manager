@@ -47,6 +47,7 @@
                             <th class="p-2">Character</th>
                             <th class="p-2">Light Cone</th>
                             <th class="p-2">Head</th>
+                            <th class="p-2">Hand</th>
                             <th class="p-2">Body</th>
                             <th class="p-2">Feet</th>
                             <th class="p-2">Link Rope</th>
@@ -59,6 +60,7 @@
                             <td class="p-2">Kafka</td>
                             <td class="p-2">Patience is All You Need</td>
                             <td class="p-2">Headpiece X</td>
+                            <td class="p-2">Handpiece X</td>
                             <td class="p-2">Bodypiece Y</td>
                             <td class="p-2">Feetpiece Z</td>
                             <td class="p-2">Link Rope A</td>
@@ -77,11 +79,86 @@
 
         <!-- New Build Button -->
         <div class="flex justify-center">
-            <button class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">
+            <button id="openModal" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">
                 <span>new build</span>
                 <span class="text-xl font-bold">+</span>
             </button>
         </div>
+
+        <div id="buildModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
+            <div id="modalContent" class="bg-white rounded-xl p-8 w-[90%] max-w-3xl shadow-lg relative">
+              <button id="closeModal" class="absolute top-2 right-4 text-xl font-bold text-gray-600">&times;</button>
+              
+              <h2 class="text-xl font-semibold mb-4">Create New Build</h2>
+          
+              <div class="grid grid-cols-2 gap-6">
+                <div>
+                  <label class="block mb-1">Character</label>
+                  <select class="w-full border px-3 py-2 rounded" placeholder="search...">
+                    <option disabled selected>search...</option>
+                    <!-- Populate dynamically -->
+                  </select>
+                </div>
+          
+                <div>
+                  <label class="block mb-1">Light Cone</label>
+                  <select class="w-full border px-3 py-2 rounded" placeholder="search...">
+                    <option disabled selected>search...</option>
+                  </select>
+                </div>
+          
+                <div class="col-span-2">
+                  <h3 class="font-semibold mt-4 mb-2">Relics</h3>
+                  <div class="grid grid-cols-3 gap-4">
+                    <div>
+                      <label class="block mb-1">Head</label>
+                      <select class="w-full border px-3 py-2 rounded">
+                        <option disabled selected>search...</option>
+                      </select>
+                    </div>
+                    <div>
+                        <label class="block mb-1">Hand</label>
+                        <select class="w-full border px-3 py-2 rounded">
+                          <option disabled selected>search...</option>
+                        </select>
+                      </div>
+                    <div>
+                      <label class="block mb-1">Body</label>
+                      <select class="w-full border px-3 py-2 rounded">
+                        <option disabled selected>search...</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block mb-1">Feet</label>
+                      <select class="w-full border px-3 py-2 rounded">
+                        <option disabled selected>search...</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block mb-1">Link Rope</label>
+                      <select class="w-full border px-3 py-2 rounded">
+                        <option disabled selected>search...</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block mb-1">Planar Sphere</label>
+                      <select class="w-full border px-3 py-2 rounded">
+                        <option disabled selected>search...</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          
+              <div class="flex justify-end mt-6">
+                <button id="insertBuild" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Save Build</button>
+              </div>
+            </div>
+          </div>
+          
+
+
+        <script src="js/dashboard.js"></script>
 
     </main>
 
