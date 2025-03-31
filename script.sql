@@ -67,6 +67,12 @@ create table Builds (
     foreign key (cid) references CharacterRelations on delete cascade
 );
 
+CREATE SEQUENCE build_seq
+  START WITH 0
+  INCREMENT BY 1
+  NOCACHE
+  NOCYCLE;
+
 create table Stats (
     sid number,
     stat_type varchar2(30),
@@ -272,11 +278,11 @@ insert into CharacterRelations(cid, name, cone_id) values
     (4, 'Asta', NULL);
 
 -- Builds
-insert into Builds(bid, name, playstyle, cid) values (0, 'Destruction MC DPS', 'Crit DPS', 0);
-insert into Builds(bid, name, playstyle, cid) values (1, 'Himeko PF', 'Break Support', 3);
-insert into Builds(bid, name, playstyle, cid) values (2, 'Dan Heng Build', 'Speed DPS', 2);
-insert into Builds(bid, name, playstyle, cid) values (3, 'Asta Support', 'Speed Support', 4);
-insert into Builds(bid, name, playstyle, cid) values (4, 'March build', 'Freeze Tank', 1);
+-- insert into Builds(bid, name, playstyle, cid) values (0, 'Destruction MC DPS', 'Crit DPS', 0);
+-- insert into Builds(bid, name, playstyle, cid) values (1, 'Himeko PF', 'Break Support', 3);
+-- insert into Builds(bid, name, playstyle, cid) values (2, 'Dan Heng Build', 'Speed DPS', 2);
+-- insert into Builds(bid, name, playstyle, cid) values (3, 'Asta Support', 'Speed Support', 4);
+-- insert into Builds(bid, name, playstyle, cid) values (4, 'March build', 'Freeze Tank', 1);
 
 -- Stats for March 7th (cid = 1)
 insert into Stats(sid, stat_type, stat_value, cid) values (10, 'HP', 1058, 1);
@@ -384,6 +390,8 @@ insert into RelicSet(set_name, two_pb, four_pb) values
     ('Sigonia, the Unclaimed Desolation', 'Increases the wearer''s CRIT Rate by 4%. When an enemy target gets defeated, the wearer''s CRIT DMG increases by 4%, stacking up to 10 time(s).', NULL);
 insert into RelicSet(set_name, two_pb, four_pb) values
     ('Rutilant Arena', 'Increases the wearer''s CRIT Rate by 8%. When the wearer''s current CRIT Rate reaches 70% or higher, the wearer''s Basic ATK and Skill DMG increase by 20%.', NULL);
+insert into RelicSet(set_name, two_pb, four_pb) values (
+    'Musketeer of Wild Wheat', 'ATK increases by 12%.', 'The wearer''s SPD increases by 6% and Basic ATK DMG increases by 10%.');
 
 -- RelicDetails
 insert into RelicDetails(name, relic_type, set_name) values ('Grand Duke''s Crown of Netherflame', 'Head', 'The Ashblazing Grand Duke');
@@ -391,6 +399,7 @@ insert into RelicDetails(name, relic_type, set_name) values ('Champion''s Chest 
 insert into RelicDetails(name, relic_type, set_name) values ('Knight''s Iron Boots of Order', 'Feet', 'Knight of Purity Palace');
 insert into RelicDetails(name, relic_type, set_name) values ('Sigonia''s Knot of Cyclicality', 'Link Rope', 'Sigonia, the Unclaimed Desolation');
 insert into RelicDetails(name, relic_type, set_name) values ('Taikiyan Laser Stadium', 'Planar Sphere', 'Rutilant Arena');
+insert into RelicDetails(name, relic_type, set_name) values ('Musketeer''s Coarse Leather Gloves', 'Hand', 'Musketeer of Wild Wheat');
 
 -- Relics 
 insert into Relics(rid, relic_level, name, main_stat, rarity) values (0, 10, 'Grand Duke''s Crown of Netherflame', 'HP', 5);
@@ -398,21 +407,22 @@ insert into Relics(rid, relic_level, name, main_stat, rarity) values (1, 13, 'Ch
 insert into Relics(rid, relic_level, name, main_stat, rarity) values (2, 1, 'Knight''s Iron Boots of Order', 'ATK%', 3);
 insert into Relics(rid, relic_level, name, main_stat, rarity) values (3, 14, 'Sigonia''s Knot of Cyclicality', 'Energy Regen', 4);
 insert into Relics(rid, relic_level, name, main_stat, rarity) values (4, 12, 'Taikiyan Laser Stadium', 'HP%', 5);
+insert into Relics(rid, relic_level, name, main_stat, rarity) values (5, 12, 'Musketeer''s Coarse Leather Gloves', 'ATK%', 4);
 
 -- Builds_Relics
-insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (1, 0, 'HP', 'CRIT Rate, CRIT DMG, ATK%');
-insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (0, 1, 'HP', 'ATK%, CRIT Rate, CRIT DMG, SPD');
-insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (4, 2, 'SPD, DEF%', 'Effect Hit Rate, DEF%, SPD, HP%');
-insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (1, 3, 'ATK%', 'CRIT Rate, CRIT DMG, SPD');
-insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (2, 4, 'ATK%', 'CRIT Rate, CRIT DMG, ATK%, SPD');
+-- insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (1, 0, 'HP', 'CRIT Rate, CRIT DMG, ATK%');
+-- insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (0, 1, 'HP', 'ATK%, CRIT Rate, CRIT DMG, SPD');
+-- insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (4, 2, 'SPD, DEF%', 'Effect Hit Rate, DEF%, SPD, HP%');
+-- insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (1, 3, 'ATK%', 'CRIT Rate, CRIT DMG, SPD');
+-- insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (2, 4, 'ATK%', 'CRIT Rate, CRIT DMG, ATK%, SPD');
 
 
 -- Builds_LightCones
-insert into Builds_LightCones(bid, cone_id) values (0, 0);
-insert into Builds_LightCones(bid, cone_id) values (1, 3);
-insert into Builds_LightCones(bid, cone_id) values (2, 2);
-insert into Builds_LightCones(bid, cone_id) values (3, 4);
-insert into Builds_LightCones(bid, cone_id) values (4, 1);
+-- insert into Builds_LightCones(bid, cone_id) values (0, 0);
+-- insert into Builds_LightCones(bid, cone_id) values (1, 3);
+-- insert into Builds_LightCones(bid, cone_id) values (2, 2);
+-- insert into Builds_LightCones(bid, cone_id) values (3, 4);
+-- insert into Builds_LightCones(bid, cone_id) values (4, 1);
 
 -- Characters_Consumables
 insert into Characters_Consumables(name, cid) values ('Alfalfa Salad', 0);
