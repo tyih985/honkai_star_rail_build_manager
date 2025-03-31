@@ -1,9 +1,13 @@
+function formatFileName(name) {
+  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '') + '.png';
+}
 
 // Fetches specific Character details and displays it
 async function fetchAndDisplayCharacter() {
     const urlParams = new URLSearchParams(window.location.search);
     const name = urlParams.get('name');
     document.getElementById('char-name').innerText = name;
+    const imagePath = `assets/characters/${formatFileName(name)}`;
 
     const response = await fetch(`/characters/${encodeURIComponent(name)}`, {
         method: 'GET'
@@ -13,6 +17,10 @@ async function fetchAndDisplayCharacter() {
 
     if (char) {
       document.getElementById('char-path').innerText = char.details;
+
+      const img = document.getElementById('character-image');
+      img.src = imagePath;
+      img.alt = name;
 
       const statsDiv = document.getElementById('stats');
       char.stats.forEach(([label, value]) => {
