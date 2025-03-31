@@ -129,6 +129,17 @@ router.put('/builds/:bid', async (req, res) => {
     }
 });
 
+router.get('/builds/characters', async (req, res) => {
+    const tableContent = await appService.fetchBuildCharactersFromDb();
+    res.json({ data: tableContent });
+});
+
+router.get('/builds/lightcones', async (req, res) => {
+    const tableContent = await appService.fetchBuildLightConesFromDb();
+    res.json({ data: tableContent });
+});
+
+
 router.get('/characters/:name', async (req, res) => {
     const bid = decodeURIComponent(req.params.name);
     const tableContent = await appService.searchCharacter(search);

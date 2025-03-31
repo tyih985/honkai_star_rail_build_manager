@@ -70,8 +70,9 @@ async function createNewBuild(event) {
     const relicFeet = document.getElementById("relicFeet").value;
     const relicLinkRope = document.getElementById("relicLinkRope").value;
     const relicPlanarSphere = document.getElementById("relicPlanarSphere").value;
+    console.log(buildName, playstyle, cid, cone_id);
 
-    if (!buildName || !playstyle || !cid || !cone_id) {
+    if (!buildName || !playstyle || cid === 'search...' || cone_id === 'search...') {
         showToast("Please fill in all required fields.", "error");
         return;
     }
@@ -99,7 +100,7 @@ async function createNewBuild(event) {
         });
 
         if (!response.ok) {
-            showToast("Error creating build", "error");
+            showToast("A build with this name already exists.", "error");
             return;
         }
 
@@ -199,14 +200,6 @@ async function closeEditModal() {
 async function openCreateBuildModal() {
     const modal = document.getElementById("buildModal");
     modal.classList.remove("hidden");
-    populateDropdown('/characters', 'buildCharacter');
-    populateDropdown('/lightcones', 'buildLightCone');
-    populateDropdown('/relics?type=Head', 'relicHead');
-    populateDropdown('/relics?type=Hand', 'relicHand');
-    populateDropdown('/relics?type=Body', 'relicBody');
-    populateDropdown('/relics?type=Feet', 'relicFeet');
-    populateDropdown('/relics?type=Link Rope', 'relicLinkRope');
-    populateDropdown('/relics?type=Planar Sphere', 'relicPlanarSphere');
 }
 
 async function closeCreateBuildModal() {
@@ -274,8 +267,8 @@ async function populateDropdown(endpoint, selectElementId) {
         selectElement.innerHTML = '<option disabled selected>search...</option>';
         data.data.forEach(item => {
             const option = document.createElement("option");
-            option.value = item.CID || item.CONE_ID || item.RID;
-            option.textContent = (item.NAME || "");
+            option.value = item[0];
+            option.textContent = (item[1] || "");
             selectElement.appendChild(option);
         });
     } catch (error) {
@@ -294,6 +287,15 @@ window.onload = function() {
     document.getElementById("closeEditModal").addEventListener("click", closeEditModal);
     document.getElementById("editForm").addEventListener("submit", updateBuild);
     document.getElementById("insertBuild").addEventListener("click", createNewBuild);
+
+    populateDropdown('/builds/characters', 'buildCharacter');
+    populateDropdown('/builds/lightcones', 'buildLightCone');
+    populateDropdown('/relics?type=Head', 'relicHead');
+    populateDropdown('/relics?type=Hand', 'relicHand');
+    populateDropdown('/relics?type=Body', 'relicBody');
+    populateDropdown('/relics?type=Feet', 'relicFeet');
+    populateDropdown('/relics?type=Link Rope', 'relicLinkRope');
+    populateDropdown('/relics?type=Planar Sphere', 'relicPlanarSphere');
 
 
     // document.getElementById("insertBuild").addEventListener("submit",  )

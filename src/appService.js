@@ -161,7 +161,7 @@ async function fetchCharacterDetailFromDb(name) {
         return result.rows[0][0];
     }).catch(() => {
         return [];
-    })
+    });
 }
 
 async function fetchCharacterStatsFromDb(name) {
@@ -174,7 +174,7 @@ async function fetchCharacterStatsFromDb(name) {
         return result.rows;
     }).catch(() => {
         return [];
-    })
+    });
 }
 
 async function fetchCharMaterialsFromDb(name) {
@@ -189,7 +189,7 @@ async function fetchCharMaterialsFromDb(name) {
         return result.rows[0];
     }).catch(() => {
         return [];
-    })
+    });
 }
 
 async function fetchBuildsDetailsFromDb() {
@@ -202,12 +202,31 @@ async function fetchBuildsDetailsFromDb() {
         return result.rows;
     }).catch(() => {
         return [];
-    })
+    });
 }
 
-async function fetchBuildRelicsFromDb(bid) {
-    // TODO
-    return;
+async function fetchBuildCharactersFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT cid, name
+            FROM CharacterRelations 
+        `);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function fetchBuildLightConesFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT cone_id, name
+            FROM LightCones 
+        `);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
 }
 
 async function fetchLightConesFromDb() {
@@ -375,6 +394,8 @@ module.exports = {
     fetchCharacterDetailFromDb,
     fetchCharacterStatsFromDb,
     fetchCharMaterialsFromDb,
+    fetchBuildCharactersFromDb,
+    fetchBuildLightConesFromDb,
     fetchBuildsDetailsFromDb,
     fetchLightConesFromDb,
     fetchAllRelics,
