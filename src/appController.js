@@ -92,14 +92,24 @@ router.get('/lightcones', async (req, res) => {
 });
 
 router.get('/relics', async (req, res) => {
-    const type = req.query.type;
-    let tableContent;
-    if (type) {
-        tableContent = await appService.fetchRelicsForType(type);
-    } else {
-        tableContent = await appService.fetchAllRelics();
+    try {
+        const tableContent = await appService.fetchAllRelics();
+        res.json({ data: tableContent });
+    } catch (err) {
+        console.error("Error fetching all relics:", err);
+        res.status(500).json({ error: "Failed to fetch relics" });
     }
-    res.json({ data: tableContent });
+});
+
+router.get('/relics/type/:type', async (req, res) => {
+    try {
+        const type = req.params.type;
+        const tableContent = await appService.fetchRelicsForType(type);
+        res.json({ data: tableContent });
+    } catch (err) {
+        console.error(`Error fetching relics for type ${req.params.type}:`, err);
+        res.status(500).json({ error: "Failed to fetch relics by type" });
+    }
 });
 
 router.get('/builds', async (req, res) => {

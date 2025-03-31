@@ -298,12 +298,13 @@ window.onload = function() {
 
     populateDropdown('/builds/characters', 'buildCharacter');
     populateDropdown('/builds/lightcones', 'buildLightCone');
-    populateDropdown('/relics?type=Head', 'relicHead');
-    populateDropdown('/relics?type=Hand', 'relicHand');
-    populateDropdown('/relics?type=Body', 'relicBody');
-    populateDropdown('/relics?type=Feet', 'relicFeet');
-    populateDropdown('/relics?type=Link Rope', 'relicLinkRope');
-    populateDropdown('/relics?type=Planar Sphere', 'relicPlanarSphere');
+    populateDropdown('/relics/type/Head', 'relicHead');
+    populateDropdown('/relics/type/Hand', 'relicHand');
+    populateDropdown('/relics/type/Body', 'relicBody');
+    populateDropdown('/relics/type/Feet', 'relicFeet');
+    populateDropdown('/relics/type/Link%20Rope', 'relicLinkRope');
+    populateDropdown('/relics/type/Planar%20Sphere', 'relicPlanarSphere');
+    
 
 
     // document.getElementById("insertBuild").addEventListener("submit",  )

@@ -243,12 +243,14 @@ async function fetchLightConesFromDb() {
 async function fetchAllRelics() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
-            SELECT r.rid, rd.name, rd.relic_type
+            SELECT r.name, rd.set_name, r.rarity
             FROM Relics r
             JOIN RelicDetails rd ON r.name = rd.name
+            ORDER BY r.rid
         `);
         return result.rows;
-    }).catch(() => {
+    }).catch((err) => {
+        console.error("Error fetching relics from DB:", err);
         return [];
     });
 }
@@ -256,17 +258,22 @@ async function fetchAllRelics() {
 async function fetchRelicsForType(type) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `SELECT r.rid, rd.name, rd.relic_type
-             FROM Relics r
-             JOIN RelicDetails rd ON r.name = rd.name
-             WHERE rd.relic_type = :type`,
+            `
+            SELECT r.name, rd.set_name, r.rarity
+            FROM Relics r
+            JOIN RelicDetails rd ON r.name = rd.name
+            WHERE rd.relic_type = :type
+            ORDER BY r.rid
+            `,
             [type]
         );
         return result.rows;
-    }).catch(() => {
+    }).catch((err) => {
+        console.error("Error fetching relics by type from DB:", err);
         return [];
     });
 }
+
 
 async function insertBuild(b_name, playstyle, cid, cone_id, ridData) {
     return await withOracleDB(async (connection) => {
