@@ -174,7 +174,7 @@ async function fetchCharacterStatsFromDb(name) {
         return result.rows;
     }).catch(() => {
         return [];
-    }) 
+    })
 }
 
 async function fetchCharMaterialsFromDb(name) {
@@ -189,7 +189,7 @@ async function fetchCharMaterialsFromDb(name) {
         return result.rows[0];
     }).catch(() => {
         return [];
-    }) 
+    })
 }
 
 async function fetchBuildsDetailsFromDb() {
@@ -210,51 +210,75 @@ async function fetchBuildRelicsFromDb(bid) {
     return;
 }
 
-
-async function insertBuild(bid, b_name, cone_id, lc_name, cid, c_name, rid, relic_level, r_name, main_stat, rarity, rec_main, rec_ss) {
+async function fetchLightConesFromDb() {
     return await withOracleDB(async (connection) => {
-        // Insert into Builds
+        const result = await connection.execute(
+            `SELECT * FROM LightConeDetails`
+        );
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function fetchAllRelics() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT r.rid, rd.name, rd.relic_type
+            FROM Relics r
+            JOIN RelicDetails rd ON r.name = rd.name
+        `);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function fetchRelicsForType(type) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT r.rid, rd.name, rd.relic_type
+             FROM Relics r
+             JOIN RelicDetails rd ON r.name = rd.name
+             WHERE rd.relic_type = :type`,
+            [type]
+        );
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function insertBuild(bid, b_name, playstyle, cid, cone_id, ridData) {
+    return await withOracleDB(async (connection) => {
         const buildResult = await connection.execute(
-            `INSERT INTO Builds (bid, name) VALUES (:bid, :name)`,
-            [bid, b_name],
-            { autoCommit: false } 
-        );
-
-        // Insert into LightCones
-        const lightConeResult = await connection.execute(
-            `INSERT INTO LightCones (cone_id, name, bid) VALUES (:cone_id, :name, :bid)`,
-            [cone_id, lc_name, bid],
+            `INSERT INTO Builds (bid, name, playstyle, cid) VALUES (:bid, :name, :playstyle, :cid)`,
+            [bid, b_name, playstyle, cid],
             { autoCommit: false }
         );
-
-        // Insert into CharacterRelations
-        const charRelationResult = await connection.execute(
-            `INSERT INTO CharacterRelations (cid, name, cone_id, bid) VALUES (:cid, :name, :cone_id, :bid)`,
-            [cid, c_name, cone_id, bid],
+        const buildLightConeResult = await connection.execute(
+            `INSERT INTO Builds_LightCones (bid, cone_id) VALUES (:bid, :cone_id)`,
+            [bid, cone_id],
             { autoCommit: false }
         );
-
-        // Insert into Relics
-        const relicsResult = await connection.execute(
-            `INSERT INTO Relics (rid, relic_level, name, main_stat, rarity, bid, rec_main, rec_substat) VALUES (:rid, :relic_level, :name, :main_stat, :rarity, :bid, :rec_main, :rec_substat)`,
-            [rid, relic_level, r_name, main_stat, rarity, bid, rec_main, rec_ss],
-            { autoCommit: false }
-        );
-
-        // Commit the transaction only if all queries succeed
+        let buildRelicResults = [];
+        for (const slot in ridData) {
+            const rid = ridData[slot];
+            const res = await connection.execute(
+                `INSERT INTO Builds_Relics (bid, rid) VALUES (:bid, :rid)`,
+                [bid, rid],
+                { autoCommit: false }
+            );
+            buildRelicResults.push(res);
+        }
         await connection.commit();
-
+        const relicsSuccess = buildRelicResults.every(r => r.rowsAffected > 0);
         return (
             buildResult.rowsAffected > 0 &&
-            lightConeResult.rowsAffected > 0 &&
-            charRelationResult.rowsAffected > 0 &&
-            relicsResult.rowsAffected > 0
+            buildLightConeResult.rowsAffected > 0 &&
+            relicsSuccess
         );
-
-    }).catch(() => {
-        return false;
-    });
-
+    }).catch(() => false);
 }
 
 async function updateNameBuild(bid, newName, newPlaystyle) {
@@ -286,21 +310,6 @@ async function deleteBuild(bid) {
             return false;
         }
     });
-}
-
-async function fetchBuildMaterialsFromDb(bid) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(`
-            SELECT md.name
-            FROM MaterialDetails md, Characters_Materials cm, Materials m
-            WHERE m.mid = cm.mid AND m.name = md.name AND cm.cid = (SELECT cid
-                                                                    FROM CharacterRelations
-                                                                    WHERE name=:name)
-        `, [name]);
-        return result.rows[0];
-    }).catch(() => {
-        return [];
-    }) 
 }
 
 async function searchCharacter(search) {
@@ -358,15 +367,18 @@ async function searchRelics(search) {
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
-    initiateDemotable, 
-    insertDemotable, 
-    updateNameDemotable, 
+    initiateDemotable,
+    insertDemotable,
+    updateNameDemotable,
     countDemotable,
     fetchCharactersFromDb,
     fetchCharacterDetailFromDb,
     fetchCharacterStatsFromDb,
     fetchCharMaterialsFromDb,
     fetchBuildsDetailsFromDb,
+    fetchLightConesFromDb,
+    fetchAllRelics,
+    fetchRelicsForType,
     insertBuild,
     updateNameBuild,
     deleteBuild,

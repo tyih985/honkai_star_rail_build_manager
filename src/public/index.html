@@ -10,157 +10,174 @@
 
 <body class="bg-gray-50 font-sans">
 
-    <!-- Navigation -->
-    <nav class="flex justify-end p-4 bg-white shadow-sm space-x-4 text-sm">
-        <a href="#" class="font-semibold text-indigo-600">my builds</a>
-        <a href="char_list.html" class="hover:underline">characters</a>
-        <a href="#" class="hover:underline">light cones</a>
-        <a href="#" class="hover:underline">relics</a>
-    </nav>
+<!-- Navigation -->
+<nav class="flex justify-end p-4 bg-white shadow-sm space-x-4 text-sm">
+    <a href="#" class="font-semibold text-indigo-600">my builds</a>
+    <a href="char_list.html" class="hover:underline">characters</a>
+    <a href="#" class="hover:underline">light cones</a>
+    <a href="#" class="hover:underline">relics</a>
+</nav>
 
-    <main class="max-w-5xl mx-auto py-10 space-y-8">
+<main class="max-w-5xl mx-auto py-10 space-y-8">
 
-        <!-- Title -->
-        <h1 class="text-2xl font-semibold">My Builds</h1>
+    <!-- Title -->
+    <h1 class="text-2xl font-semibold">My Builds</h1>
 
-        <!-- Build List -->
-        <section id="builds" class="space-y-4">
-          <!-- Updated dynamically -->
-        </section>
+    <!-- Build List -->
+    <section id="builds" class="space-y-4">
+        <!-- Updated dynamically -->
+    </section>
 
-        <!-- New Build Button -->
-        <div class="flex justify-center">
-            <button id="openCreateBuildModal" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">
-                <span>new build</span>
-                <span class="text-xl font-bold">+</span>
-            </button>
-        </div>
+    <!-- New Build Button -->
+    <div class="flex justify-center">
+        <button id="openCreateBuildModal" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">
+            <span>new build</span>
+            <span class="text-xl font-bold">+</span>
+        </button>
+    </div>
 
-        <div id="buildModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
-          <div id="modalContent" class="bg-white rounded-xl p-8 w-[90%] max-w-3xl shadow-lg relative">
+    <div id="buildModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
+        <div id="modalContent" class="bg-white rounded-xl p-8 w-[90%] max-w-3xl shadow-lg relative">
             <button id="closeCreateBuildModal" class="absolute top-2 right-4 text-xl font-bold text-gray-600">&times;</button>
-            
+
             <h2 class="text-xl font-semibold mb-4">Create New Build</h2>
 
             <div class="mb-4">
-              <label class="block mb-1 font-medium">Build Name</label>
-              <input
-                type="text"
-                id="buildName"
-                class="w-full border px-3 py-2 rounded"
-                placeholder="Enter build name..."
-              />
+                <label class="block mb-1 font-medium">Build Name</label>
+                <input
+                        type="text"
+                        id="buildName"
+                        class="w-full border px-3 py-2 rounded"
+                        placeholder="Enter build name..."
+                />
             </div>
-        
+
+            <div class="mb-4">
+                <label class="block mb-1 font-medium">Playstyle</label>
+                <input
+                        type="text"
+                        id="buildPlaystyle"
+                        class="w-full border px-3 py-2 rounded"
+                        placeholder="Enter playstyle..."
+                />
+            </div>
+
             <div class="grid grid-cols-2 gap-6">
-              <div>
-                <label class="block mb-1">Character</label>
-                <select class="w-full border px-3 py-2 rounded" placeholder="search...">
-                  <option disabled selected>search...</option>
-                  <!-- Populate dynamically -->
-                </select>
-              </div>
-        
-              <div>
-                <label class="block mb-1">Light Cone</label>
-                <select class="w-full border px-3 py-2 rounded" placeholder="search...">
-                  <option disabled selected>search...</option>
-                </select>
-              </div>
-        
-              <div class="col-span-2">
-                <h3 class="font-semibold mt-4 mb-2">Relics</h3>
-                <div class="grid grid-cols-3 gap-4">
-                  <div>
-                    <label class="block mb-1">Head</label>
-                    <select class="w-full border px-3 py-2 rounded">
-                      <option disabled selected>search...</option>
-                    </select>
-                  </div>
-                  <div>
-                      <label class="block mb-1">Hand</label>
-                      <select class="w-full border px-3 py-2 rounded">
+                <div>
+                    <label class="block mb-1">Character</label>
+                    <select id="buildCharacter" class="w-full border px-3 py-2 rounded">
                         <option disabled selected>search...</option>
-                      </select>
-                    </div>
-                  <div>
-                    <label class="block mb-1">Body</label>
-                    <select class="w-full border px-3 py-2 rounded">
-                      <option disabled selected>search...</option>
+                        <!-- Populated dynamically -->
                     </select>
-                  </div>
-                  <div>
-                    <label class="block mb-1">Feet</label>
-                    <select class="w-full border px-3 py-2 rounded">
-                      <option disabled selected>search...</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="block mb-1">Link Rope</label>
-                    <select class="w-full border px-3 py-2 rounded">
-                      <option disabled selected>search...</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="block mb-1">Planar Sphere</label>
-                    <select class="w-full border px-3 py-2 rounded">
-                      <option disabled selected>search...</option>
-                    </select>
-                  </div>
                 </div>
-              </div>
+
+                <div>
+                    <label class="block mb-1">Light Cone</label>
+                    <select id="buildLightCone" class="w-full border px-3 py-2 rounded">
+                        <option disabled selected>search...</option>
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+
+                <div class="col-span-2">
+                    <h3 class="font-semibold mt-4 mb-2">Relics</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label class="block mb-1">Head</label>
+                            <select id="relicHead" class="w-full border px-3 py-2 rounded">
+                                <option disabled selected>search...</option>
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block mb-1">Hand</label>
+                            <select id="relicHand" class="w-full border px-3 py-2 rounded">
+                                <option disabled selected>search...</option>
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block mb-1">Body</label>
+                            <select id="relicBody" class="w-full border px-3 py-2 rounded">
+                                <option disabled selected>search...</option>
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block mb-1">Feet</label>
+                            <select id="relicFeet" class="w-full border px-3 py-2 rounded">
+                                <option disabled selected>search...</option>
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block mb-1">Link Rope</label>
+                            <select id="relicLinkRope" class="w-full border px-3 py-2 rounded">
+                                <option disabled selected>search...</option>
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block mb-1">Planar Sphere</label>
+                            <select id="relicPlanarSphere" class="w-full border px-3 py-2 rounded">
+                                <option disabled selected>search...</option>
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
-        
+
             <div class="flex justify-end mt-6">
-              <button id="insertBuild" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Save Build</button>
+                <button id="insertBuild" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Save Build</button>
             </div>
-          </div>
         </div>
+    </div>
 
-        <!-- Edit Build Modal  -->
-        <div id="editModal" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 hidden">
-          <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg relative">
+    <!-- Edit Build Modal  -->
+    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg relative">
             <button id="closeEditModal" class="absolute top-3 right-4 text-xl text-gray-400 hover:text-gray-600">&times;</button>
-            
+
             <h2 class="text-lg font-semibold mb-4">Rename Build</h2>
-            
+
             <form id="editForm">
-              <input type="hidden" id="editBuildId" />
-              <label class="block mb-2 font-medium text-gray-700" for="editBuildName">New Build Name</label>
-              <input
-                type="text"
-                id="editBuildName"
-                name="editBuildName"
-                class="w-full border px-3 py-2 rounded focus:outline-none focus:ring focus:border-indigo-500"
-                placeholder="Enter new name"
-                required
-              />
-              <label class="block mb-2 font-medium text-gray-700 mt-4" for="editBuildPlaystyle">New Playstyle</label>
-              <input
-                type="text"
-                id="editBuildPlaystyle"
-                name="editBuildPlaystyle"
-                class="w-full border px-3 py-2 rounded focus:outline-none focus:ring focus:border-indigo-500"
-                placeholder="Enter new playstyle"
-                required
-              />
-              
-              <div class="flex justify-end mt-4">
-                <button
-                  type="submit"
-                  class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded"
-                >
-                  Save
-                </button>
-              </div>
+                <input type="hidden" id="editBuildId" />
+                <label class="block mb-2 font-medium text-gray-700" for="editBuildName">New Build Name</label>
+                <input
+                        type="text"
+                        id="editBuildName"
+                        name="editBuildName"
+                        class="w-full border px-3 py-2 rounded focus:outline-none focus:ring focus:border-indigo-500"
+                        placeholder="Enter new name"
+                        required
+                />
+                <label class="block mb-2 font-medium text-gray-700 mt-4" for="editBuildPlaystyle">New Playstyle</label>
+                <input
+                        type="text"
+                        id="editBuildPlaystyle"
+                        name="editBuildPlaystyle"
+                        class="w-full border px-3 py-2 rounded focus:outline-none focus:ring focus:border-indigo-500"
+                        placeholder="Enter new playstyle"
+                        required
+                />
+
+                <div class="flex justify-end mt-4">
+                    <button
+                            type="submit"
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded"
+                    >
+                        Save
+                    </button>
+                </div>
             </form>
-          </div>
-        </div> 
-        <div id="toast-container" class="fixed top-6 right-6 z-50 flex flex-col space-y-2"></div>
+        </div>
+    </div>
+    <div id="toast-container" class="fixed top-6 right-6 z-50 flex flex-col space-y-2"></div>
 
-        <script src="js/dashboard.js"></script>
+    <script src="js/dashboard.js"></script>
 
-    </main>
+</main>
 
 </body>
 

@@ -52,13 +52,13 @@ router.post("/update-name-demotable", async (req, res) => {
 router.get('/count-demotable', async (req, res) => {
     const tableCount = await appService.countDemotable();
     if (tableCount >= 0) {
-        res.json({ 
-            success: true,  
+        res.json({
+            success: true,
             count: tableCount
         });
     } else {
-        res.status(500).json({ 
-            success: false, 
+        res.status(500).json({
+            success: false,
             count: tableCount
         });
     }
@@ -84,6 +84,22 @@ router.get('/characters/:name', async (req, res) => {
             materials: materials
         }
     })
+});
+
+router.get('/lightcones', async (req, res) => {
+    const tableContent = await appService.fetchLightConesFromDb();
+    res.json({ data: tableContent });
+});
+
+router.get('/relics', async (req, res) => {
+    const type = req.query.type;
+    let tableContent;
+    if (type) {
+        tableContent = await appService.fetchRelicsForType(type);
+    } else {
+        tableContent = await appService.fetchAllRelics();
+    }
+    res.json({ data: tableContent });
 });
 
 router.get('/builds', async (req, res) => {

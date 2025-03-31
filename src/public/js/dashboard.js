@@ -17,12 +17,12 @@ async function fetchAndDisplayBuilds() {
     container.appendChild(fragment);
     setupListeners();
 }
-  
+
 function renderBuildCard([ bid, name, character, lightCone, playstyle ]) {
     const wrapper = document.createElement('div');
     wrapper.className = "build-card relative bg-white shadow-md rounded-lg p-6 border border-gray-200 hover:shadow-lg transition";
     wrapper.dataset.bid = bid; // ✅ make sure it's on the wrapper
-  
+
     wrapper.innerHTML = `
       <div class="flex justify-between items-start mb-4">
         <div>
@@ -43,9 +43,9 @@ function renderBuildCard([ bid, name, character, lightCone, playstyle ]) {
         </div>
       </div>
     `;
-  
+
     return wrapper;
-  }
+}
 
 function setupListeners() {
     document.querySelectorAll(".deleteBuild").forEach(button => {
@@ -55,6 +55,63 @@ function setupListeners() {
         button.addEventListener("click", openEditModal);
     })
 
+}
+
+async function createNewBuild(event) {
+    event.preventDefault();
+
+    const buildName = document.getElementById("buildName").value.trim();
+    const playstyle = document.getElementById("buildPlaystyle").value.trim();
+    const cid = document.getElementById("buildCharacter").value;
+    const cone_id = document.getElementById("buildLightCone").value;
+    const relicHead = document.getElementById("relicHead").value;
+    const relicHand = document.getElementById("relicHand").value;
+    const relicBody = document.getElementById("relicBody").value;
+    const relicFeet = document.getElementById("relicFeet").value;
+    const relicLinkRope = document.getElementById("relicLinkRope").value;
+    const relicPlanarSphere = document.getElementById("relicPlanarSphere").value;
+
+    if (!buildName || !playstyle || !cid || !cone_id) {
+        showToast("Please fill in all required fields.", "error");
+        return;
+    }
+
+    try {
+        const payload = {
+            name: buildName,
+            playstyle: playstyle,
+            cid: cid,
+            cone_id: cone_id,
+            relics: {
+                head: relicHead,
+                hand: relicHand,
+                body: relicBody,
+                feet: relicFeet,
+                linkRope: relicLinkRope,
+                planarSphere: relicPlanarSphere
+            }
+        };
+
+        const response = await fetch('/builds', {
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            showToast("Error creating build", "error");
+            return;
+        }
+
+        showToast("Build created successfully", "success");
+        document.getElementById("buildName").value = "";
+        document.getElementById("buildPlaystyle").value = "";
+        closeCreateBuildModal();
+        fetchTableData();
+    } catch (err) {
+        console.error(err);
+        showToast("An unexpected error occurred. Please try again.", "error");
+    }
 }
 
 async function deleteBuild(event) {
@@ -76,7 +133,7 @@ async function deleteBuild(event) {
     }
 }
 
-async function updateBuildName(event) {
+async function updateBuild(event) {
     event.preventDefault();
     const editBuildNameInput = document.getElementById("editBuildName");
     const editBuildPlaystyleInput = document.getElementById("editBuildPlaystyle");
@@ -92,9 +149,9 @@ async function updateBuildName(event) {
         const res = await fetch(`/builds/${bid}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-              name: newName,
-              playstyle: newPlaystyle
+            body: JSON.stringify({
+                name: newName,
+                playstyle: newPlaystyle
             })
         });
 
@@ -108,10 +165,10 @@ async function updateBuildName(event) {
         card.querySelector("h3").textContent = newName;
         card.querySelector(".build-playstyle span").textContent = newPlaystyle;
 
-        showToast("Build renamed successfully.", "success");
+        showToast("Build edited successfully.", "success");
         closeEditModal();
     } catch (err) {
-        showToast("Error occurred during rename.", "error");
+        showToast("Error occurred during edit.", "error");
     }
 }
 
@@ -142,6 +199,14 @@ async function closeEditModal() {
 async function openCreateBuildModal() {
     const modal = document.getElementById("buildModal");
     modal.classList.remove("hidden");
+    populateDropdown('/characters', 'buildCharacter');
+    populateDropdown('/lightcones', 'buildLightCone');
+    populateDropdown('/relics?type=Head', 'relicHead');
+    populateDropdown('/relics?type=Hand', 'relicHand');
+    populateDropdown('/relics?type=Body', 'relicBody');
+    populateDropdown('/relics?type=Feet', 'relicFeet');
+    populateDropdown('/relics?type=Link Rope', 'relicLinkRope');
+    populateDropdown('/relics?type=Planar Sphere', 'relicPlanarSphere');
 }
 
 async function closeCreateBuildModal() {
@@ -161,44 +226,62 @@ async function windowListener(event) {
 
 function showToast(message, type = 'success') {
     const toast = document.createElement('div');
-  
+
     const iconMap = {
-      success: '✅',
-      error: '❌'
+        success: '✅',
+        error: '❌'
     };
-  
+
     const borderMap = {
-      success: 'border-green-500',
-      error: 'border-red-500'
+        success: 'border-green-500',
+        error: 'border-red-500'
     };
-  
+
     toast.className = `
       flex items-start gap-3 w-72 p-4 pr-5 bg-white rounded-lg border-l-4 shadow-md
       ${borderMap[type] || borderMap.success}
       transform transition-all duration-500 ease-out translate-x-96 opacity-0
     `;
-  
+
     toast.innerHTML = `
       <div class="text-xl">${iconMap[type] || '✅'}</div>
       <div class="text-sm font-medium text-gray-800">${message}</div>
     `;
-  
+
     const container = document.getElementById('toast-container');
     container.appendChild(toast);
-  
+
     // Trigger animation
     requestAnimationFrame(() => {
-      toast.classList.remove('translate-x-96', 'opacity-0');
-      toast.classList.add('translate-x-0', 'opacity-100');
+        toast.classList.remove('translate-x-96', 'opacity-0');
+        toast.classList.add('translate-x-0', 'opacity-100');
     });
-  
+
     // Auto-dismiss after 3s
     setTimeout(() => {
-      toast.classList.remove('translate-x-0', 'opacity-100');
-      toast.classList.add('translate-x-96', 'opacity-0');
-      setTimeout(() => toast.remove(), 400); // remove after animation
+        toast.classList.remove('translate-x-0', 'opacity-100');
+        toast.classList.add('translate-x-96', 'opacity-0');
+        setTimeout(() => toast.remove(), 400); // remove after animation
     }, 3000);
-  }
+}
+
+async function populateDropdown(endpoint, selectElementId) {
+    try {
+        const response = await fetch(endpoint);
+        if (!response.ok) throw new Error("Error fetching data");
+        const data = await response.json();
+        const selectElement = document.getElementById(selectElementId);
+        selectElement.innerHTML = '<option disabled selected>search...</option>';
+        data.data.forEach(item => {
+            const option = document.createElement("option");
+            option.value = item.CID || item.CONE_ID || item.RID;
+            option.textContent = (item.NAME || "");
+            selectElement.appendChild(option);
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
@@ -209,7 +292,8 @@ window.onload = function() {
     document.getElementById("openCreateBuildModal").addEventListener("click", openCreateBuildModal);
     document.getElementById("closeCreateBuildModal").addEventListener("click", closeCreateBuildModal);
     document.getElementById("closeEditModal").addEventListener("click", closeEditModal);
-    document.getElementById("editForm").addEventListener("submit", updateBuildName);
+    document.getElementById("editForm").addEventListener("submit", updateBuild);
+    document.getElementById("insertBuild").addEventListener("click", createNewBuild);
 
 
     // document.getElementById("insertBuild").addEventListener("submit",  )

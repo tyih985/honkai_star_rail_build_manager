@@ -27,209 +27,209 @@ drop table Characters;
 -- Create tables
 
 create table Characters (
-    name varchar2(100) not null,
-    element varchar2(100),
-    rarity number,
-    path varchar2(100),
-    primary key (name)
+                            name varchar2(100) not null,
+                            element varchar2(100),
+                            rarity number,
+                            path varchar2(100),
+                            primary key (name)
 );
-    
+
 create table Builds (
-    bid number not null,
-    name varchar2(100) unique,
-    playstyle varchar2(100),
-    primary key (bid)
+                        bid number not null,
+                        name varchar2(100) unique,
+                        playstyle varchar2(100),
+                        cid number not null,
+                        primary key (bid),
+                        foreign key (cid) references CharacterRelations on delete cascade
 );
 
 create table LightConeDetails (
-    name varchar2(100) not null,
-    rarity number,
-    path varchar2(100),
-    effect varchar2(500),
-    primary key (name)
+                                  name varchar2(100) not null,
+                                  rarity number,
+                                  path varchar2(100),
+                                  effect varchar2(500),
+                                  primary key (name)
 );
 
 create table LightCones (
-    cone_id number not null,
-    name varchar2(100),
-    primary key (cone_id),
-    foreign key (name) references LightConeDetails on delete cascade
+                            cone_id number not null,
+                            name varchar2(100),
+                            primary key (cone_id),
+                            foreign key (name) references LightConeDetails on delete cascade
 );
 
 create table CharacterRelations (
-    cid number not null,
-    name varchar2(100) not null,
-    cone_id number,
-    bid number,
-    primary key (cid),
-    foreign key (name) references Characters on delete cascade,
-    foreign key (cone_id) references LightCones on delete set null,
-    foreign key (bid) references Builds on delete set null
+                                    cid number not null,
+                                    name varchar2(100) not null,
+                                    cone_id number,
+                                    primary key (cid),
+                                    foreign key (name) references Characters on delete cascade,
+                                    foreign key (cone_id) references LightCones on delete set null
 );
 
 create table Stats (
-    sid number,
-    stat_type varchar2(30),
-    stat_value number,
-    cid number,
-    primary key (sid, cid),
-    unique (cid, stat_type),
-    foreign key (cid) references CharacterRelations on delete cascade
+                       sid number,
+                       stat_type varchar2(30),
+                       stat_value number,
+                       cid number,
+                       primary key (sid, cid),
+                       unique (cid, stat_type),
+                       foreign key (cid) references CharacterRelations on delete cascade
 );
 
 
 create table Abilities (
-    name varchar2(100),
-    ability_type varchar2(100),
-    ability_level number,
-    cid number,
-    description varchar2(500),
-    primary key (name, cid),
-    foreign key (cid) references CharacterRelations on delete cascade
+                           name varchar2(100),
+                           ability_type varchar2(100),
+                           ability_level number,
+                           cid number,
+                           description varchar2(500),
+                           primary key (name, cid),
+                           foreign key (cid) references CharacterRelations on delete cascade
 );
 
 
 create table Basic (
-    name varchar2(100),
-    cid number,
-    damage varchar2(100),
-    primary key (name, cid),
-    foreign key (name, cid) references Abilities(name, cid) on delete cascade
+                       name varchar2(100),
+                       cid number,
+                       damage varchar2(100),
+                       primary key (name, cid),
+                       foreign key (name, cid) references Abilities(name, cid) on delete cascade
 );
 
 
 create table Skills (
-    name varchar2(100),
-    cid number,
-    duration number,
-    primary key (name, cid),
-    foreign key (name, cid) references Abilities(name, cid) on delete cascade
+                        name varchar2(100),
+                        cid number,
+                        duration number,
+                        primary key (name, cid),
+                        foreign key (name, cid) references Abilities(name, cid) on delete cascade
 );
 
 
 create table Ultimates (
-    name varchar2(100),
-    cid number,
-    energy_cost number,
-    primary key (name, cid),
-    foreign key (name, cid) references Abilities(name, cid) on delete cascade
+                           name varchar2(100),
+                           cid number,
+                           energy_cost number,
+                           primary key (name, cid),
+                           foreign key (name, cid) references Abilities(name, cid) on delete cascade
 );
 
 
 create table Talents (
-    name varchar2(100),
-    cid number,
-    trigger_condition varchar2(100),
-    effect varchar2(200),
-    primary key (name, cid),
-    foreign key (name, cid) references Abilities(name, cid) on delete cascade
+                         name varchar2(100),
+                         cid number,
+                         trigger_condition varchar2(100),
+                         effect varchar2(200),
+                         primary key (name, cid),
+                         foreign key (name, cid) references Abilities(name, cid) on delete cascade
 );
 
 create table Consumables (
-    name varchar2(100) not null,
-    consumable_type varchar2(100),
-    effect varchar2(500),
-    primary key (name)
+                             name varchar2(100) not null,
+                             consumable_type varchar2(100),
+                             effect varchar2(500),
+                             primary key (name)
 );
 
 create table MaterialDetails (
-    name varchar2(100) not null,
-    material_type varchar2(100),
-    location varchar2(100),
-    rarity number,
-    primary key (name)
+                                 name varchar2(100) not null,
+                                 material_type varchar2(100),
+                                 location varchar2(100),
+                                 rarity number,
+                                 primary key (name)
 );
 
 create table Materials (
-    mid number not null,
-    name varchar2(100) not null,
-    primary key (mid),
-    foreign key (name) references MaterialDetails on delete cascade
+                           mid number not null,
+                           name varchar2(100) not null,
+                           primary key (mid),
+                           foreign key (name) references MaterialDetails on delete cascade
 );
 
 create table RelicSet (
-    set_name varchar2(100) not null,
-    two_pb varchar2(500),
-    four_pb varchar2(500),
-    primary key (set_name)
+                          set_name varchar2(100) not null,
+                          two_pb varchar2(500),
+                          four_pb varchar2(500),
+                          primary key (set_name)
 );
 
 create table RelicDetails (
-    name varchar2(100) not null,
-    relic_type varchar2(100),
-    set_name varchar2(100) not null,
-    primary key (name),
-    foreign key (set_name) references RelicSet on delete cascade
+                              name varchar2(100) not null,
+                              relic_type varchar2(100),
+                              set_name varchar2(100) not null,
+                              primary key (name),
+                              foreign key (set_name) references RelicSet on delete cascade
 );
 
 create table Relics (
-    rid number not null,
-    relic_level number,
-    name varchar2(100) not null,
-    main_stat varchar2(30),
-    rarity number,
-    primary key (rid),
-    foreign key (name) references RelicDetails on delete cascade
+                        rid number not null,
+                        relic_level number,
+                        name varchar2(100) not null,
+                        main_stat varchar2(30),
+                        rarity number,
+                        primary key (rid),
+                        foreign key (name) references RelicDetails on delete cascade
 );
 
 create table Builds_LightCones (
-    bid number,
-    cone_id number,
-    primary key (bid, cone_id),
-    foreign key (bid) references Builds on delete cascade,
-    foreign key (cone_id) references LightCones
+                                   bid number,
+                                   cone_id number,
+                                   primary key (bid, cone_id),
+                                   foreign key (bid) references Builds on delete cascade,
+                                   foreign key (cone_id) references LightCones
 );
 
 create table Builds_Relics (
-    bid number,
-    rid number,
-    rec_main varchar2(100),
-    rec_substat varchar2(100),
-    primary key (bid, rid),
-    foreign key (bid) references Builds on delete cascade,
-    foreign key (rid) references Relics 
+                               bid number,
+                               rid number,
+                               rec_main varchar2(100),
+                               rec_substat varchar2(100),
+                               primary key (bid, rid),
+                               foreign key (bid) references Builds on delete cascade,
+                               foreign key (rid) references Relics
 );
 
 
 create table Characters_Consumables (
-    name varchar2(100),
-    cid number,
-    primary key (name, cid),
-    foreign key (name) references Consumables on delete cascade,
-    foreign key (cid) references CharacterRelations on delete cascade
+                                        name varchar2(100),
+                                        cid number,
+                                        primary key (name, cid),
+                                        foreign key (name) references Consumables on delete cascade,
+                                        foreign key (cid) references CharacterRelations on delete cascade
 );
 
 create table Characters_Materials (
-    cid number,
-    mid number,
-    primary key (cid, mid),
-    foreign key (cid) references CharacterRelations on delete cascade,
-    foreign key (mid) references Materials on delete cascade
+                                      cid number,
+                                      mid number,
+                                      primary key (cid, mid),
+                                      foreign key (cid) references CharacterRelations on delete cascade,
+                                      foreign key (mid) references Materials on delete cascade
 );
 
 create table Abilities_Materials (
-    cid number,
-    name varchar2(100),
-    mid number,
-    primary key (cid, name, mid),
-    foreign key (name, cid) references Abilities(name, cid) on delete cascade,
-    foreign key (mid) references Materials on delete cascade
+                                     cid number,
+                                     name varchar2(100),
+                                     mid number,
+                                     primary key (cid, name, mid),
+                                     foreign key (name, cid) references Abilities(name, cid) on delete cascade,
+                                     foreign key (mid) references Materials on delete cascade
 );
 
 create table LightCones_Materials (
-    cone_id number,
-    mid number,
-    primary key (cone_id, mid),
-    foreign key (cone_id) references LightCones on delete cascade,
-    foreign key (mid) references Materials on delete cascade
+                                      cone_id number,
+                                      mid number,
+                                      primary key (cone_id, mid),
+                                      foreign key (cone_id) references LightCones on delete cascade,
+                                      foreign key (mid) references Materials on delete cascade
 );
 
 create table Relics_Materials (
-    rid number,
-    mid number,
-    primary key (rid, mid),
-    foreign key (rid) references Relics on delete cascade,
-    foreign key (mid) references Materials on delete cascade
+                                  rid number,
+                                  mid number,
+                                  primary key (rid, mid),
+                                  foreign key (rid) references Relics on delete cascade,
+                                  foreign key (mid) references Materials on delete cascade
 );
 
 -- Insert Data
@@ -249,16 +249,16 @@ insert into Builds(bid, name, playstyle) values (4, 'March build', 'Freeze Tank'
 
 
 -- Light Cone Details
-insert into LightConeDetails(name, rarity, path, effect) values 
-('Something Irreplaceable', 5, 'The Destruction', 'Kinship -- Increases the wearer''s ATK by 24/28/32/36/40%. When the wearer defeats an enemy or is hit, immediately restores HP equal to 8/9/10/11/12% of the wearer''s ATK. At the same time, the wearer''s DMG is increased by 24/28/32/36/40% until the end of their next turn. This effect cannot stack and can only trigger 1 time per turn.');
-insert into LightConeDetails(name, rarity, path, effect) values 
-('Moment of Victory', 5, 'The Preservation', 'Verdict -- Increases the wearer''s DEF by 24/28/32/36/40% and Effect Hit Rate by 24/28/32/36/40%. Increases the chance for the wearer to be attacked by enemies. When the wearer is attacked, increase their DEF by an additional 24/28/32/36/40% until the end of the wearer''s turn.');
-insert into LightConeDetails(name, rarity, path, effect) values 
-('Swordplay', 4, 'The Hunt', 'Answers of Their Own -- For each time the wearer hits the same target, DMG dealt increases by 8/10/12/14/16%, stacking up to 5 time(s). This effect will be dispelled when the wearer changes targets.');
-insert into LightConeDetails(name, rarity, path, effect) values 
-('Night on the Milky Way', 5, 'The Erudition', 'Meteor Swarm -- For every enemy on the field, increases the wearer''s ATK by 9%/10.5%/12%/13.5%/15%, up to 5 stacks. When an enemy is inflicted with Weakness Break, the DMG dealt by the wearer increases by 30%/35%/40%/45%/50% for 1 turn.');
-insert into LightConeDetails(name, rarity, path, effect) values 
-('Meshing Cogs', 3, 'The Harmony', 'Fleet Triumph -- After the wearer uses attacks or gets hit, additionally regenerates 4/5/6/7/8 Energy. This effect can only be triggered 1 time per turn.');
+insert into LightConeDetails(name, rarity, path, effect) values
+    ('Something Irreplaceable', 5, 'The Destruction', 'Kinship -- Increases the wearer''s ATK by 24/28/32/36/40%. When the wearer defeats an enemy or is hit, immediately restores HP equal to 8/9/10/11/12% of the wearer''s ATK. At the same time, the wearer''s DMG is increased by 24/28/32/36/40% until the end of their next turn. This effect cannot stack and can only trigger 1 time per turn.');
+insert into LightConeDetails(name, rarity, path, effect) values
+    ('Moment of Victory', 5, 'The Preservation', 'Verdict -- Increases the wearer''s DEF by 24/28/32/36/40% and Effect Hit Rate by 24/28/32/36/40%. Increases the chance for the wearer to be attacked by enemies. When the wearer is attacked, increase their DEF by an additional 24/28/32/36/40% until the end of the wearer''s turn.');
+insert into LightConeDetails(name, rarity, path, effect) values
+    ('Swordplay', 4, 'The Hunt', 'Answers of Their Own -- For each time the wearer hits the same target, DMG dealt increases by 8/10/12/14/16%, stacking up to 5 time(s). This effect will be dispelled when the wearer changes targets.');
+insert into LightConeDetails(name, rarity, path, effect) values
+    ('Night on the Milky Way', 5, 'The Erudition', 'Meteor Swarm -- For every enemy on the field, increases the wearer''s ATK by 9%/10.5%/12%/13.5%/15%, up to 5 stacks. When an enemy is inflicted with Weakness Break, the DMG dealt by the wearer increases by 30%/35%/40%/45%/50% for 1 turn.');
+insert into LightConeDetails(name, rarity, path, effect) values
+    ('Meshing Cogs', 3, 'The Harmony', 'Fleet Triumph -- After the wearer uses attacks or gets hit, additionally regenerates 4/5/6/7/8 Energy. This effect can only be triggered 1 time per turn.');
 
 -- LightCones
 insert into LightCones(cone_id, name) values (0, 'Something Irreplaceable');
@@ -268,16 +268,16 @@ insert into LightCones(cone_id, name) values (3, 'Night on the Milky Way');
 insert into LightCones(cone_id, name) values (4, 'Meshing Cogs');
 
 -- CharacterRelations
-insert into CharacterRelations(cid, name, cone_id, bid) values 
-(0, 'Trailblazer', NULL, 0);
-insert into CharacterRelations(cid, name, cone_id, bid) values 
-(1, 'March 7th', NULL, 4);
-insert into CharacterRelations(cid, name, cone_id, bid) values 
-(2, 'Dan Heng', NULL, 2);
-insert into CharacterRelations(cid, name, cone_id, bid) values 
-(3, 'Himeko', NULL, 1);
-insert into CharacterRelations(cid, name, cone_id, bid) values 
-(4, 'Asta', NULL, 3);
+insert into CharacterRelations(cid, name, cone_id) values
+    (0, 'Trailblazer', NULL);
+insert into CharacterRelations(cid, name, cone_id) values
+    (1, 'March 7th', NULL);
+insert into CharacterRelations(cid, name, cone_id) values
+    (2, 'Dan Heng', NULL);
+insert into CharacterRelations(cid, name, cone_id) values
+    (3, 'Himeko', NULL);
+insert into CharacterRelations(cid, name, cone_id) values
+    (4, 'Asta', NULL);
 
 -- Stats for March 7th (cid = 1)
 insert into Stats(sid, stat_type, stat_value, cid) values (10, 'HP', 1058, 1);
@@ -337,16 +337,16 @@ insert into Talents(name, cid, trigger_condition, effect) values ('Victory Rush'
 insert into Talents(name, cid, trigger_condition, effect) values ('Astrometry', 4, 'Enemy hit. Extra stack if enemy has Fire Weakness', 'Gains 1 stack of Charging');
 
 -- Consumables
-insert into Consumables(name, consumable_type, effect) values 
-('Alfalfa Salad', 'Attack', 'Increases all allies'' CRIT Rate by 18% for the next battle.');
-insert into Consumables(name, consumable_type, effect) values 
-('All Good Potion', 'Energy Regen', 'Immediately regenerates 50% of Max Energy for a single ally.');
-insert into Consumables(name, consumable_type, effect) values 
-('Amber Huadiao Wine', 'Defense', 'Immediately causes all allies to lose HP equal to 5% of their Max HP, and increases their Max HP by 24% for the next battle.');
-insert into Consumables(name, consumable_type, effect) values 
-('Berrypheasant Skewers', 'Restorative', 'Immediately heals one ally by 15% of the ally''s Max HP plus 150 extra HP.');
-insert into Consumables(name, consumable_type, effect) values 
-('Camo Paint', 'Special', 'Enemies will be less likely to detect your team for 75s.');
+insert into Consumables(name, consumable_type, effect) values
+    ('Alfalfa Salad', 'Attack', 'Increases all allies'' CRIT Rate by 18% for the next battle.');
+insert into Consumables(name, consumable_type, effect) values
+    ('All Good Potion', 'Energy Regen', 'Immediately regenerates 50% of Max Energy for a single ally.');
+insert into Consumables(name, consumable_type, effect) values
+    ('Amber Huadiao Wine', 'Defense', 'Immediately causes all allies to lose HP equal to 5% of their Max HP, and increases their Max HP by 24% for the next battle.');
+insert into Consumables(name, consumable_type, effect) values
+    ('Berrypheasant Skewers', 'Restorative', 'Immediately heals one ally by 15% of the ally''s Max HP plus 150 extra HP.');
+insert into Consumables(name, consumable_type, effect) values
+    ('Camo Paint', 'Special', 'Enemies will be less likely to detect your team for 75s.');
 
 -- MaterialDetails
 insert into MaterialDetails(name, material_type, location, rarity) values ('Destroyer''s Final Road', 'Trace', 'Herta Space Station', 4);
@@ -375,16 +375,16 @@ insert into Materials(mid, name) values (105, 'Lifeless Blade');
 insert into Materials(mid, name) values (106, 'Lost Crystal');
 
 -- Relic Sets
-insert into RelicSet(set_name, two_pb, four_pb) values 
-('The Ashblazing Grand Duke', 'Increases the DMG dealt by follow-up attacks by 20%.', 'When the wearer uses follow-up attacks, increases the wearer''s ATK by 6% for every time the follow-up attack deals DMG. This effect can stack up to 8 time(s) and lasts for 3 turn(s). This effect is removed the next time the wearer uses a follow-up attack.');
-insert into RelicSet(set_name, two_pb, four_pb) values 
-('Champion of Streetwise Boxing', 'Increases Physical DMG by 10%.', 'After the wearer attacks or is hit, their ATK increases by 5% for the rest of the battle. This effect can stack up to 5 time(s).');
-insert into RelicSet(set_name, two_pb, four_pb) values 
-('Knight of Purity Palace', 'Increases DEF by 15%.', 'Increases the max DMG that can be absorbed by the Shield created by the wearer by 20%.');
-insert into RelicSet(set_name, two_pb, four_pb) values 
-('Sigonia, the Unclaimed Desolation', 'Increases the wearer''s CRIT Rate by 4%. When an enemy target gets defeated, the wearer''s CRIT DMG increases by 4%, stacking up to 10 time(s).', NULL);
-insert into RelicSet(set_name, two_pb, four_pb) values 
-('Rutilant Arena', 'Increases the wearer''s CRIT Rate by 8%. When the wearer''s current CRIT Rate reaches 70% or higher, the wearer''s Basic ATK and Skill DMG increase by 20%.', NULL);
+insert into RelicSet(set_name, two_pb, four_pb) values
+    ('The Ashblazing Grand Duke', 'Increases the DMG dealt by follow-up attacks by 20%.', 'When the wearer uses follow-up attacks, increases the wearer''s ATK by 6% for every time the follow-up attack deals DMG. This effect can stack up to 8 time(s) and lasts for 3 turn(s). This effect is removed the next time the wearer uses a follow-up attack.');
+insert into RelicSet(set_name, two_pb, four_pb) values
+    ('Champion of Streetwise Boxing', 'Increases Physical DMG by 10%.', 'After the wearer attacks or is hit, their ATK increases by 5% for the rest of the battle. This effect can stack up to 5 time(s).');
+insert into RelicSet(set_name, two_pb, four_pb) values
+    ('Knight of Purity Palace', 'Increases DEF by 15%.', 'Increases the max DMG that can be absorbed by the Shield created by the wearer by 20%.');
+insert into RelicSet(set_name, two_pb, four_pb) values
+    ('Sigonia, the Unclaimed Desolation', 'Increases the wearer''s CRIT Rate by 4%. When an enemy target gets defeated, the wearer''s CRIT DMG increases by 4%, stacking up to 10 time(s).', NULL);
+insert into RelicSet(set_name, two_pb, four_pb) values
+    ('Rutilant Arena', 'Increases the wearer''s CRIT Rate by 8%. When the wearer''s current CRIT Rate reaches 70% or higher, the wearer''s Basic ATK and Skill DMG increase by 20%.', NULL);
 
 -- RelicDetails
 insert into RelicDetails(name, relic_type, set_name) values ('Grand Duke''s Crown of Netherflame', 'Head', 'The Ashblazing Grand Duke');
@@ -409,11 +409,11 @@ insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (2, 4, 'ATK%',
 
 
 -- Builds_LightCones
-insert into Builds_LightCones(bid, cone_id) values (0, 0);  
-insert into Builds_LightCones(bid, cone_id) values (1, 3);  
-insert into Builds_LightCones(bid, cone_id) values (2, 2);  
-insert into Builds_LightCones(bid, cone_id) values (3, 4);  
-insert into Builds_LightCones(bid, cone_id) values (4, 1);  
+insert into Builds_LightCones(bid, cone_id) values (0, 0);
+insert into Builds_LightCones(bid, cone_id) values (1, 3);
+insert into Builds_LightCones(bid, cone_id) values (2, 2);
+insert into Builds_LightCones(bid, cone_id) values (3, 4);
+insert into Builds_LightCones(bid, cone_id) values (4, 1);
 
 -- Characters_Consumables
 insert into Characters_Consumables(name, cid) values ('Alfalfa Salad', 0);
