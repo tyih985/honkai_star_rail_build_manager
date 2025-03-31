@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Honkai: Star Rail Build Manager</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="bg-gray-50 font-sans">
@@ -24,7 +23,7 @@
     <!-- Title -->
     <h1 class="text-2xl font-semibold">Characters</h1> 
 
-    <!-- Search -->
+    <!-- Search
     <div class="search-section" id="filters">
         <div class="filter-row">
             <select class="attribute">
@@ -45,7 +44,34 @@
         </div>
     </div>
     <button onclick="addFilter()">Add Filter</button>
-    <button onclick="searchCharacters()">Search</button>
+    <button onclick="searchCharacters()">Search</button> -->
+
+    <!-- Search -->
+    <div class="bg-white p-6 rounded shadow space-y-4" id="filters">
+      <div class="filter-row flex items-center space-x-4">
+          <select class="attribute border px-3 py-2 rounded">
+              <option value="name">Name</option>
+              <option value="element">Element</option>
+              <option value="rarity">Rarity</option>
+              <option value="path">Path</option>
+          </select>
+
+          <p class="text-gray-500">=</p>
+
+          <input type="text" class="value border px-3 py-2 rounded w-1/2" placeholder="Enter value" />
+
+          <select class="conjunction border px-3 py-2 rounded">
+              <option value="AND">AND</option>
+              <option value="OR">OR</option>
+          </select>
+      </div>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="flex space-x-4">
+      <button onclick="addFilter()" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">Add Filter</button>
+      <button onclick="searchCharacters()" class="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl shadow">Search</button>
+    </div>
 
 
   <script>
@@ -55,21 +81,23 @@
           filterRow.classList.add("filter-row");
           
           filterRow.innerHTML = `
-              <select class="attribute">
+            <div class="filter-row flex items-center space-x-4">
+              <select class="attribute border px-3 py-2 rounded">
                   <option value="name">Name</option>
                   <option value="element">Element</option>
                   <option value="rarity">Rarity</option>
                   <option value="path">Path</option>
               </select>
               
-              <p>=</p>
+              <p class="text-gray-500">=</p>
               
-              <input type="text" class="value" placeholder="Enter value" />
+              <input type="text" class="value border px-3 py-2 rounded w-1/2" placeholder="Enter value" />
               
-              <select class="conjunction">
+              <select class="conjunction border px-3 py-2 rounded">
                   <option value="AND">AND</option>
                   <option value="OR">OR</option>
               </select>
+            </div>
           `;
           
           filterContainer.appendChild(filterRow);
