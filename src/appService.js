@@ -268,36 +268,55 @@ async function fetchRelicsForType(type) {
     });
 }
 
-async function insertBuild(bid, b_name, playstyle, cid, cone_id, ridData) {
+async function insertBuild(b_name, playstyle, cid, cone_id, ridData) {
     return await withOracleDB(async (connection) => {
+        // Use the build_seq to generate a new bid and return it
         const buildResult = await connection.execute(
-            `INSERT INTO Builds (bid, name, playstyle, cid) VALUES (:bid, :name, :playstyle, :cid)`,
-            [bid, b_name, playstyle, cid],
+            `INSERT INTO Builds (bid, name, playstyle, cid) 
+             VALUES (build_seq.nextval, :name, :playstyle, :cid)
+             RETURNING bid INTO :bid_out`,
+            {
+                name: b_name,
+                playstyle: playstyle,
+                cid: cid,
+                bid_out: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
+            },
             { autoCommit: false }
         );
+        // Retrieve the generated bid from the OUT binding
+        const newBid = buildResult.outBinds.bid_out[0];
+
+        // Insert into Builds_LightCones using the new bid
         const buildLightConeResult = await connection.execute(
             `INSERT INTO Builds_LightCones (bid, cone_id) VALUES (:bid, :cone_id)`,
-            [bid, cone_id],
+            { bid: newBid, cone_id: cone_id },
             { autoCommit: false }
         );
+
+        // Insert into Builds_Relics for each relic slot
         let buildRelicResults = [];
         for (const slot in ridData) {
             const rid = ridData[slot];
             const res = await connection.execute(
                 `INSERT INTO Builds_Relics (bid, rid) VALUES (:bid, :rid)`,
-                [bid, rid],
+                { bid: newBid, rid: rid },
                 { autoCommit: false }
             );
             buildRelicResults.push(res);
         }
         await connection.commit();
+
+        // Verify that all inserts affected at least one row
         const relicsSuccess = buildRelicResults.every(r => r.rowsAffected > 0);
         return (
             buildResult.rowsAffected > 0 &&
             buildLightConeResult.rowsAffected > 0 &&
             relicsSuccess
         );
-    }).catch(() => false);
+    }).catch((err) => {
+        console.error("Insert build error:", err);
+        return false;
+    });
 }
 
 async function updateNameBuild(bid, newName, newPlaystyle) {

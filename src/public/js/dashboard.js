@@ -107,6 +107,14 @@ async function createNewBuild(event) {
         showToast("Build created successfully", "success");
         document.getElementById("buildName").value = "";
         document.getElementById("buildPlaystyle").value = "";
+        document.getElementById("buildCharacter").value = "search...";
+        document.getElementById("buildLightCone").value = "search...";
+        document.getElementById("relicHead").value = "search...";
+        document.getElementById("relicHand").value = "search...";
+        document.getElementById("relicBody").value = "search...";
+        document.getElementById("relicFeet").value = "search...";
+        document.getElementById("relicLinkRope").value = "search...";
+        document.getElementById("relicPlanarSphere").value = "search...";
         closeCreateBuildModal();
         fetchTableData();
     } catch (err) {

@@ -164,6 +164,20 @@ router.get('/relics/:search', async (req, res) => {
     res.json({data: tableContent});
 });
 
+router.post('/builds', async (req, res) => {
+    const { name, playstyle, cid, cone_id, relics } = req.body;
 
+    try {
+        const result = await appService.insertBuild(name, playstyle, cid, cone_id, relics);
+        if (result) {
+            res.status(201).json({ message: "Build created successfully" });
+        } else {
+            res.status(400).json({ message: "Build creation failed" });
+        }
+    } catch (err) {
+        console.error("Error creating build:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
 
 module.exports = router;
