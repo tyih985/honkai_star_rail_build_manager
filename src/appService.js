@@ -229,10 +229,10 @@ async function fetchBuildLightConesFromDb() {
     });
 }
 
-async function fetchLightConesFromDb() {
+async function fetchLightConesFromDb(columns) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `SELECT * FROM LightConeDetails`
+            `SELECT ${columns} FROM LightConeDetails`
         );
         return result.rows;
     }).catch(() => {

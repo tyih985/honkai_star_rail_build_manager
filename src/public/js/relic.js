@@ -19,7 +19,6 @@ async function fetchAndDisplayRelics() {
       `;
       
       card.innerHTML = `
-        <div class="w-full aspect-square bg-gray-200 rounded mb-2"></div>
         <h2 class="text-lg font-semibold">${name}</h2>
         <p class="text-sm text-gray-600"><strong>Set:</strong> ${setName}</p>
         <p class="text-sm text-yellow-500">${'★'.repeat(rarity)}</p>

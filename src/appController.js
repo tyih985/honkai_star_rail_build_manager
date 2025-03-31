@@ -87,7 +87,8 @@ router.get('/characters/:name', async (req, res) => {
 });
 
 router.get('/lightcones', async (req, res) => {
-    const tableContent = await appService.fetchLightConesFromDb();
+    const columns = req.query.columns;
+    const tableContent = await appService.fetchLightConesFromDb(columns);
     res.json({ data: tableContent });
 });
 

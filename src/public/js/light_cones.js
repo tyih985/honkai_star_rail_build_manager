@@ -1,13 +1,17 @@
-async function renderCards() {
+async function fetchAndDisplayLightCones() {
     const displaySection = document.getElementById("light-cones");
     const selectedAttributes = Array.from(document.querySelectorAll('.attribute-toggle:checked')).map(cb => cb.value);
     displaySection.innerHTML = ""; 
-
-    const response = await fetch("/lightcones", {
-        method: 'GET'
-    });
-    const responseData = await response.json();
-    const lightCones = formatLightCones(responseData.data);
+    console.log(selectedAttributes);
+    let lightCones = [];
+    if (selectedAttributes.length !== 0) {
+        const columns = selectedAttributes.join(", ");
+        const response = await fetch(`/lightcones?columns=${columns}`, {
+            method: 'GET'
+        });
+        const responseData = await response.json();
+        lightCones = formatLightCones(responseData.data, selectedAttributes);
+    }
   
     lightCones.forEach(lc => {
       const card = document.createElement("div");
@@ -36,20 +40,19 @@ async function renderCards() {
     });
 }
 
-function formatLightCones(lightCones) {
-    const formatted = lightCones.map(([name, rarity, path, description]) => ({
-        name,
-        rarity,
-        path,
-        description
-    }));
-    return formatted;
-}
-
+function formatLightCones(lightCones, columns) {
+    return lightCones.map(row => {
+      return columns.reduce((obj, col, index) => {
+        obj[col] = row[index];
+        return obj;
+      }, {});
+    });
+  }
+  
 
 window.onload = function () {
-    renderCards();
+    fetchAndDisplayLightCones();
     document.querySelectorAll(".attribute-toggle").forEach(cb => {
-        cb.addEventListener("change", renderCards);
+        cb.addEventListener("change", fetchAndDisplayLightCones);
     });
 }
