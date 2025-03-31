@@ -18,11 +18,12 @@ drop table Skills;
 drop table Basic;
 drop table Abilities;
 drop table Stats;
-drop table CharacterRelations;
 drop table Builds;
+drop table CharacterRelations;
 drop table LightCones;
 drop table LightConeDetails;
 drop table Characters;
+drop sequence build_seq;
 
 -- Create tables
 
@@ -67,11 +68,11 @@ create table Builds (
     foreign key (cid) references CharacterRelations on delete cascade
 );
 
-CREATE SEQUENCE build_seq
-  START WITH 0
-  INCREMENT BY 1
-  NOCACHE
-  NOCYCLE;
+create sequence build_seq
+  start with 1
+  increment by 1
+  nocache
+  nocycle;
 
 create table Stats (
     sid number,
