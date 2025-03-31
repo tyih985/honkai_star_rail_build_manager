@@ -18,218 +18,218 @@ drop table Skills;
 drop table Basic;
 drop table Abilities;
 drop table Stats;
+drop table Builds;
 drop table CharacterRelations;
 drop table LightCones;
 drop table LightConeDetails;
-drop table Builds;
 drop table Characters;
 
 -- Create tables
 
 create table Characters (
-                            name varchar2(100) not null,
-                            element varchar2(100),
-                            rarity number,
-                            path varchar2(100),
-                            primary key (name)
-);
-
-create table Builds (
-                        bid number not null,
-                        name varchar2(100) unique,
-                        playstyle varchar2(100),
-                        cid number not null,
-                        primary key (bid),
-                        foreign key (cid) references CharacterRelations on delete cascade
+    name varchar2(100) not null,
+    element varchar2(100),
+    rarity number,
+    path varchar2(100),
+    primary key (name)
 );
 
 create table LightConeDetails (
-                                  name varchar2(100) not null,
-                                  rarity number,
-                                  path varchar2(100),
-                                  effect varchar2(500),
-                                  primary key (name)
+    name varchar2(100) not null,
+    rarity number,
+    path varchar2(100),
+    effect varchar2(500),
+    primary key (name)
 );
 
 create table LightCones (
-                            cone_id number not null,
-                            name varchar2(100),
-                            primary key (cone_id),
-                            foreign key (name) references LightConeDetails on delete cascade
+    cone_id number not null,
+    name varchar2(100),
+    primary key (cone_id),
+    foreign key (name) references LightConeDetails on delete cascade
 );
 
 create table CharacterRelations (
-                                    cid number not null,
-                                    name varchar2(100) not null,
-                                    cone_id number,
-                                    primary key (cid),
-                                    foreign key (name) references Characters on delete cascade,
-                                    foreign key (cone_id) references LightCones on delete set null
+    cid number not null,
+    name varchar2(100) not null,
+    cone_id number,
+    primary key (cid),
+    foreign key (name) references Characters on delete cascade,
+    foreign key (cone_id) references LightCones on delete set null
+);
+
+create table Builds (
+    bid number not null,
+    name varchar2(100) unique,
+    playstyle varchar2(100),
+    cid number not null,
+    primary key (bid),
+    foreign key (cid) references CharacterRelations on delete cascade
 );
 
 create table Stats (
-                       sid number,
-                       stat_type varchar2(30),
-                       stat_value number,
-                       cid number,
-                       primary key (sid, cid),
-                       unique (cid, stat_type),
-                       foreign key (cid) references CharacterRelations on delete cascade
+    sid number,
+    stat_type varchar2(30),
+    stat_value number,
+    cid number,
+    primary key (sid, cid),
+    unique (cid, stat_type),
+    foreign key (cid) references CharacterRelations on delete cascade
 );
 
 
 create table Abilities (
-                           name varchar2(100),
-                           ability_type varchar2(100),
-                           ability_level number,
-                           cid number,
-                           description varchar2(500),
-                           primary key (name, cid),
-                           foreign key (cid) references CharacterRelations on delete cascade
+    name varchar2(100),
+    ability_type varchar2(100),
+    ability_level number,
+    cid number,
+    description varchar2(500),
+    primary key (name, cid),
+    foreign key (cid) references CharacterRelations on delete cascade
 );
 
 
 create table Basic (
-                       name varchar2(100),
-                       cid number,
-                       damage varchar2(100),
-                       primary key (name, cid),
-                       foreign key (name, cid) references Abilities(name, cid) on delete cascade
+    name varchar2(100),
+    cid number,
+    damage varchar2(100),
+    primary key (name, cid),
+    foreign key (name, cid) references Abilities(name, cid) on delete cascade
 );
 
 
 create table Skills (
-                        name varchar2(100),
-                        cid number,
-                        duration number,
-                        primary key (name, cid),
-                        foreign key (name, cid) references Abilities(name, cid) on delete cascade
+    name varchar2(100),
+    cid number,
+    duration number,
+    primary key (name, cid),
+    foreign key (name, cid) references Abilities(name, cid) on delete cascade
 );
 
 
 create table Ultimates (
-                           name varchar2(100),
-                           cid number,
-                           energy_cost number,
-                           primary key (name, cid),
-                           foreign key (name, cid) references Abilities(name, cid) on delete cascade
+    name varchar2(100),
+    cid number,
+    energy_cost number,
+    primary key (name, cid),
+    foreign key (name, cid) references Abilities(name, cid) on delete cascade
 );
 
 
 create table Talents (
-                         name varchar2(100),
-                         cid number,
-                         trigger_condition varchar2(100),
-                         effect varchar2(200),
-                         primary key (name, cid),
-                         foreign key (name, cid) references Abilities(name, cid) on delete cascade
+    name varchar2(100),
+    cid number,
+    trigger_condition varchar2(100),
+    effect varchar2(200),
+    primary key (name, cid),
+    foreign key (name, cid) references Abilities(name, cid) on delete cascade
 );
 
 create table Consumables (
-                             name varchar2(100) not null,
-                             consumable_type varchar2(100),
-                             effect varchar2(500),
-                             primary key (name)
+    name varchar2(100) not null,
+    consumable_type varchar2(100),
+    effect varchar2(500),
+    primary key (name)
 );
 
 create table MaterialDetails (
-                                 name varchar2(100) not null,
-                                 material_type varchar2(100),
-                                 location varchar2(100),
-                                 rarity number,
-                                 primary key (name)
+    name varchar2(100) not null,
+    material_type varchar2(100),
+    location varchar2(100),
+    rarity number,
+    primary key (name)
 );
 
 create table Materials (
-                           mid number not null,
-                           name varchar2(100) not null,
-                           primary key (mid),
-                           foreign key (name) references MaterialDetails on delete cascade
+    mid number not null,
+    name varchar2(100) not null,
+    primary key (mid),
+    foreign key (name) references MaterialDetails on delete cascade
 );
 
 create table RelicSet (
-                          set_name varchar2(100) not null,
-                          two_pb varchar2(500),
-                          four_pb varchar2(500),
-                          primary key (set_name)
+    set_name varchar2(100) not null,
+    two_pb varchar2(500),
+    four_pb varchar2(500),
+    primary key (set_name)
 );
 
 create table RelicDetails (
-                              name varchar2(100) not null,
-                              relic_type varchar2(100),
-                              set_name varchar2(100) not null,
-                              primary key (name),
-                              foreign key (set_name) references RelicSet on delete cascade
+    name varchar2(100) not null,
+    relic_type varchar2(100),
+    set_name varchar2(100) not null,
+    primary key (name),
+    foreign key (set_name) references RelicSet on delete cascade
 );
 
 create table Relics (
-                        rid number not null,
-                        relic_level number,
-                        name varchar2(100) not null,
-                        main_stat varchar2(30),
-                        rarity number,
-                        primary key (rid),
-                        foreign key (name) references RelicDetails on delete cascade
+    rid number not null,
+    relic_level number,
+    name varchar2(100) not null,
+    main_stat varchar2(30),
+    rarity number,
+    primary key (rid),
+    foreign key (name) references RelicDetails on delete cascade
 );
 
 create table Builds_LightCones (
-                                   bid number,
-                                   cone_id number,
-                                   primary key (bid, cone_id),
-                                   foreign key (bid) references Builds on delete cascade,
-                                   foreign key (cone_id) references LightCones
+    bid number,
+    cone_id number,
+    primary key (bid, cone_id),
+    foreign key (bid) references Builds on delete cascade,
+    foreign key (cone_id) references LightCones
 );
 
 create table Builds_Relics (
-                               bid number,
-                               rid number,
-                               rec_main varchar2(100),
-                               rec_substat varchar2(100),
-                               primary key (bid, rid),
-                               foreign key (bid) references Builds on delete cascade,
-                               foreign key (rid) references Relics
+    bid number,
+    rid number,
+    rec_main varchar2(100),
+    rec_substat varchar2(100),
+    primary key (bid, rid),
+    foreign key (bid) references Builds on delete cascade,
+    foreign key (rid) references Relics
 );
 
 
 create table Characters_Consumables (
-                                        name varchar2(100),
-                                        cid number,
-                                        primary key (name, cid),
-                                        foreign key (name) references Consumables on delete cascade,
-                                        foreign key (cid) references CharacterRelations on delete cascade
+    name varchar2(100),
+    cid number,
+    primary key (name, cid),
+    foreign key (name) references Consumables on delete cascade,
+    foreign key (cid) references CharacterRelations on delete cascade
 );
 
 create table Characters_Materials (
-                                      cid number,
-                                      mid number,
-                                      primary key (cid, mid),
-                                      foreign key (cid) references CharacterRelations on delete cascade,
-                                      foreign key (mid) references Materials on delete cascade
+    cid number,
+    mid number,
+    primary key (cid, mid),
+    foreign key (cid) references CharacterRelations on delete cascade,
+    foreign key (mid) references Materials on delete cascade
 );
 
 create table Abilities_Materials (
-                                     cid number,
-                                     name varchar2(100),
-                                     mid number,
-                                     primary key (cid, name, mid),
-                                     foreign key (name, cid) references Abilities(name, cid) on delete cascade,
-                                     foreign key (mid) references Materials on delete cascade
+    cid number,
+    name varchar2(100),
+    mid number,
+    primary key (cid, name, mid),
+    foreign key (name, cid) references Abilities(name, cid) on delete cascade,
+    foreign key (mid) references Materials on delete cascade
 );
 
 create table LightCones_Materials (
-                                      cone_id number,
-                                      mid number,
-                                      primary key (cone_id, mid),
-                                      foreign key (cone_id) references LightCones on delete cascade,
-                                      foreign key (mid) references Materials on delete cascade
+    cone_id number,
+    mid number,
+    primary key (cone_id, mid),
+    foreign key (cone_id) references LightCones on delete cascade,
+    foreign key (mid) references Materials on delete cascade
 );
 
 create table Relics_Materials (
-                                  rid number,
-                                  mid number,
-                                  primary key (rid, mid),
-                                  foreign key (rid) references Relics on delete cascade,
-                                  foreign key (mid) references Materials on delete cascade
+    rid number,
+    mid number,
+    primary key (rid, mid),
+    foreign key (rid) references Relics on delete cascade,
+    foreign key (mid) references Materials on delete cascade
 );
 
 -- Insert Data
@@ -239,14 +239,6 @@ insert into Characters(name, element, rarity, path) values ('March 7th', 'Ice', 
 insert into Characters(name, element, rarity, path) values ('Dan Heng', 'Wind', 4, 'The Hunt');
 insert into Characters(name, element, rarity, path) values ('Himeko', 'Fire', 5, 'The Erudition');
 insert into Characters(name, element, rarity, path) values ('Asta', 'Fire', 4, 'The Harmony');
-
--- Builds
-insert into Builds(bid, name, playstyle) values (0, 'Destruction MC DPS', 'Crit DPS');
-insert into Builds(bid, name, playstyle) values (1, 'Himeko PF', 'Break Support');
-insert into Builds(bid, name, playstyle) values (2, 'Dan Heng Build', 'Speed DPS');
-insert into Builds(bid, name, playstyle) values (3, 'Asta Support', 'Speed Support');
-insert into Builds(bid, name, playstyle) values (4, 'March build', 'Freeze Tank');
-
 
 -- Light Cone Details
 insert into LightConeDetails(name, rarity, path, effect) values
@@ -278,6 +270,13 @@ insert into CharacterRelations(cid, name, cone_id) values
     (3, 'Himeko', NULL);
 insert into CharacterRelations(cid, name, cone_id) values
     (4, 'Asta', NULL);
+
+-- Builds
+insert into Builds(bid, name, playstyle, cid) values (0, 'Destruction MC DPS', 'Crit DPS', 0);
+insert into Builds(bid, name, playstyle, cid) values (1, 'Himeko PF', 'Break Support', 3);
+insert into Builds(bid, name, playstyle, cid) values (2, 'Dan Heng Build', 'Speed DPS', 2);
+insert into Builds(bid, name, playstyle, cid) values (3, 'Asta Support', 'Speed Support', 4);
+insert into Builds(bid, name, playstyle, cid) values (4, 'March build', 'Freeze Tank', 1);
 
 -- Stats for March 7th (cid = 1)
 insert into Stats(sid, stat_type, stat_value, cid) values (10, 'HP', 1058, 1);

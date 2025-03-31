@@ -197,7 +197,7 @@ async function fetchBuildsDetailsFromDb() {
         const result = await connection.execute(`
             SELECT b.bid, b.name, cr.name, lc.name, b.playstyle
             FROM Builds b, CharacterRelations cr, Builds_LightCones blc, LightCones lc
-            WHERE b.bid = cr.bid AND blc.bid = b.bid AND blc.cone_id = lc.cone_id
+            WHERE b.cid = cr.cid AND blc.bid = b.bid AND blc.cone_id = lc.cone_id
         `);
         return result.rows;
     }).catch(() => {
