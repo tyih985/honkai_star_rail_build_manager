@@ -192,4 +192,24 @@ router.post('/builds', async (req, res) => {
     }
 });
 
+router.get('/aggregates/build_count', async (req, res) => {
+    const result = await appService.getBuildCountPerCharacter();
+    res.json({ data: result });
+});
+
+router.get('/aggregates/single_target', async (req, res) => {
+    const result = await appService.getCharactersWithMultipleSingleTargetAbilities();
+    res.json({ data: result });
+});
+
+router.get('/aggregates/above_avg_hp', async (req, res) => {
+    const result = await appService.getCharactersAboveAverageHP();
+    res.json({ data: result });
+});
+
+router.get('/aggregates/full_lightcones', async (req, res) => {
+    const result = await appService.getCharactersWithFullLightConeCoverage();
+    res.json({ data: result });
+});
+
 module.exports = router;
