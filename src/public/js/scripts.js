@@ -157,10 +157,19 @@ async function countDemotable() {
 // Converts character name to image file name
 function formatFileName(name) {
     return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '') + '.png';
-  }
+}
+
+
+
+// clear character display
+async function clearCharacters() {
+    const container = document.getElementById("characters");
+    container.innerHTML = "";
+}
 
 // Fetches data from Characters table and displays it
 async function fetchAndDisplayCharacters() {
+    clearCharacters();
     const response = await fetch('/characters', {
         method: 'GET'
     });
@@ -169,12 +178,6 @@ async function fetchAndDisplayCharacters() {
     console.log(characters);
 
     displayCharacters(characters)
-}
-
-// clear character display
-async function clearCharacters() {
-    const container = document.getElementById("characters");
-    container.innerHTML = "";
 }
 
 // Displays character data
@@ -219,19 +222,22 @@ async function displayCharacters(characters) {
 async function searchCharacters() {
     const searches = [];
     const searchRows = document.querySelectorAll(".filter-row");
+    allValuesEntered = true; 
 
     searchRows.forEach((row) => {
         const attribute = row.querySelector(".attribute").value;
         const value = row.querySelector(".value").value.trim();
-        const conjunction = row.querySelector(".conjunction").value;
+        const conjunction = row.querySelector(".conjunction")?.value || "";
 
-        if (value) { // if value exists
+        if (!value) { 
+            allValuesEntered = false; 
+        } else {
             searches.push({ attribute, value, conjunction });
         }
     });
 
-    if (searches.length === 0) {
-        alert("Please enter at least one filter condition.");
+    if (!allValuesEntered) {
+        alert("Please enter all values.");
         return;
     }
 
@@ -256,10 +262,14 @@ async function searchCharacters() {
 function addFilter() {
     const filterContainer = document.getElementById("filters");
     const filterRow = document.createElement("div");
-    filterRow.classList.add("div");
-    
+
     filterRow.innerHTML = `
       <div class="filter-row flex items-center space-x-4">
+        <select class="conjunction border px-3 py-2 rounded">
+            <option value="AND">AND</option>
+            <option value="OR">OR</option>
+        </select>
+
         <select class="attribute border px-3 py-2 rounded">
             <option value="name">Name</option>
             <option value="element">Element</option>
@@ -270,16 +280,37 @@ function addFilter() {
         <p class="text-gray-500">=</p>
         
         <input type="text" class="value border px-3 py-2 rounded w-1/2" placeholder="Enter value" />
-        
-        <select class="conjunction border px-3 py-2 rounded">
-            <option value="">none</option>
-            <option value="AND">AND</option>
-            <option value="OR">OR</option>
-        </select>
+        <button class="remove-filter text-gray-500 px-1 py-2 rounded">x</button>
       </div>
     `;
+
+    const removeButton = filterRow.querySelector(".remove-filter");
+    removeButton.addEventListener("click", () => {
+        filterRow.remove(); // Remove the row when the button is clicked
+    });
     
     filterContainer.appendChild(filterRow);
+}
+
+async function clearFilters() {
+    fetchAndDisplayCharacters();
+
+    const filterContainer = document.getElementById("filters"); 
+    filterContainer.innerHTML = `
+    <div class="filter-row flex items-center space-x-4">
+          <select class="attribute border px-3 py-2 rounded">
+              <option value="name">Name</option>
+              <option value="element">Element</option>
+              <option value="rarity">Rarity</option>
+              <option value="path">Path</option>
+          </select>
+
+          <p class="text-gray-500">=</p>
+
+          <input type="text" class="value border px-3 py-2 rounded w-1/2" placeholder="Enter value" />
+
+      </div>
+    `
 }
 
 // ---------------------------------------------------------------
