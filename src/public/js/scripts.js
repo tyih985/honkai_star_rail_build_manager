@@ -167,13 +167,19 @@ async function fetchAndDisplayCharacters() {
     displayCharacters(characters)
 }
 
+// clear character display
+async function clearCharacters() {
+    const container = document.getElementById("characters");
+    container.innerHTML = "";
+}
+
 // Displays character data
 async function displayCharacters(characters) {
     console.log(characters)
     const container = document.getElementById("characters");
 
     if (!characters || characters.length === 0) {
-        charactersContainer.innerHTML = "<p>No characters found.</p>";
+        container.innerHTML = "<p>No characters found.</p>";
         return;
     }
   
@@ -233,6 +239,7 @@ async function searchCharacters() {
 
 
     // Display results in the UI
+    clearCharacters();
     displayCharacters(responseData.data);
 }
 

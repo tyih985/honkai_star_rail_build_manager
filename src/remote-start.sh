@@ -29,7 +29,7 @@ sed -i "/^ORACLE_PORT=/c\ORACLE_PORT=1522" $ENV_SERVER_PATH
 
 # Define a range
 START=50000
-END=60000
+END=65535
 
 # Loop through the range and check if the port is in use
 for PORT in $(seq $START $END); do
