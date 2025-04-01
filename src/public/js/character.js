@@ -23,9 +23,10 @@ async function fetchAndDisplayCharacter() {
       img.alt = name;
 
       const statsDiv = document.getElementById('stats');
+      statsDiv.className = 'space-y-4';
       char.stats.forEach(([label, value]) => {
         const statRow = document.createElement('div');
-        statRow.className = 'flex items-center space-x-4';
+        statRow.className = 'flex items-center space-x-4 py-1';
         statRow.innerHTML = `
           <div class="w-20 font-medium text-gray-600">${label}</div>
           <div class="flex-1 bg-gray-200 rounded h-3 relative">
