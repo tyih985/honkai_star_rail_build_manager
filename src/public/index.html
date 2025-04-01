@@ -139,11 +139,11 @@
         <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg relative">
             <button id="closeEditModal" class="absolute top-3 right-4 text-xl text-gray-400 hover:text-gray-600">&times;</button>
 
-            <h2 class="text-lg font-semibold mb-4">Rename Build</h2>
+            <h2 class="text-lg font-semibold mb-4">Edit Build</h2>
 
             <form id="editForm">
                 <input type="hidden" id="editBuildId" />
-                <label class="block mb-2 font-medium text-gray-700" for="editBuildName">New Build Name</label>
+                <label class="block mb-2 font-medium text-gray-700" for="editBuildName">Build Name</label>
                 <input
                         type="text"
                         id="editBuildName"
@@ -152,7 +152,7 @@
                         placeholder="Enter new name"
                         required
                 />
-                <label class="block mb-2 font-medium text-gray-700 mt-4" for="editBuildPlaystyle">New Playstyle</label>
+                <label class="block mb-2 font-medium text-gray-700 mt-4" for="editBuildPlaystyle">Playstyle</label>
                 <input
                         type="text"
                         id="editBuildPlaystyle"
@@ -161,6 +161,11 @@
                         placeholder="Enter new playstyle"
                         required
                 />
+                <label class="block mb-2 font-medium text-gray-700 mt-4" for="editBuildCharacter">Character</label>
+                <select id="editBuildCharacter" class="w-full border px-3 py-2 rounded" required>
+                    <option disabled selected>search...</option>
+                    <!-- Populated dynamically -->
+                </select>
 
                 <div class="flex justify-end mt-4">
                     <button

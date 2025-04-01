@@ -324,11 +324,11 @@ async function insertBuild(b_name, playstyle, cid, cone_id, ridData) {
     });
 }
 
-async function updateNameBuild(bid, newName, newPlaystyle) {
+async function updateBuild(bid, newName, newPlaystyle, newCid) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `UPDATE Builds SET name=:newName, playstyle=:newPlaystyle WHERE bid=:bid`,
-            [newName, newPlaystyle, bid],
+            `UPDATE Builds SET name=:newName, playstyle=:newPlaystyle, cid=:newCid WHERE bid=:bid`,
+            [newName, newPlaystyle, newCid, bid],
             { autoCommit: true }
         );
 
@@ -436,7 +436,7 @@ module.exports = {
     fetchAllRelics,
     fetchRelicsForType,
     insertBuild,
-    updateNameBuild,
+    updateBuild,
     deleteBuild,
     searchCharacter,
     searchRelics

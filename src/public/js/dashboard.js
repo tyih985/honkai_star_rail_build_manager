@@ -27,7 +27,7 @@ function renderBuildCard([ bid, name, character, lightCone, playstyle ]) {
       <div class="flex justify-between items-start mb-4">
         <div>
           <h3 class="build-title text-lg font-semibold text-gray-800">${name}</h3>
-          <p class="text-sm text-gray-500">
+          <p class="build-char text-sm text-gray-500">
             Character: <span class="font-medium text-gray-700">${character}</span>
           </p>
           <p class="text-sm text-gray-500">
@@ -147,9 +147,11 @@ async function updateBuild(event) {
     const editBuildNameInput = document.getElementById("editBuildName");
     const editBuildPlaystyleInput = document.getElementById("editBuildPlaystyle");
     const editBuildId = document.getElementById("editBuildId");
+    const editBuildCharacterInput = document.getElementById("editBuildCharacter");
     const bid = editBuildId.value;
     const newName = editBuildNameInput.value.trim();
     const newPlaystyle = editBuildPlaystyleInput.value.trim();
+    const newChar = editBuildCharacterInput.value;
     if (!newName) {
         // do something
     }
@@ -160,7 +162,8 @@ async function updateBuild(event) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 name: newName,
-                playstyle: newPlaystyle
+                playstyle: newPlaystyle,
+                cid: newChar
             })
         });
 
@@ -173,6 +176,7 @@ async function updateBuild(event) {
         const card = document.querySelector(`[data-bid="${bid}"]`);
         card.querySelector("h3").textContent = newName;
         card.querySelector(".build-playstyle span").textContent = newPlaystyle;
+        card.querySelector(".build-char span").textContent = editBuildCharacterInput.options[editBuildCharacterInput.selectedIndex].text
 
         showToast("Build edited successfully.", "success");
         closeEditModal();
@@ -185,24 +189,34 @@ async function openEditModal(event) {
     const editModal = document.getElementById("editModal");
     const editBuildNameInput = document.getElementById("editBuildName");
     const editBuildPlaystyleInput = document.getElementById("editBuildPlaystyle");
+    const editBuildCharacterInput = document.getElementById("editBuildCharacter");
     const editBuildId = document.getElementById("editBuildId");
 
     const card = event.target.closest(".build-card");
     const bid = card.dataset.bid;
     const currentName = card.querySelector(".build-title")?.textContent ?? "";
     const currentPlaystyle = card.querySelector(".build-playstyle span")?.textContent.trim() ?? "";
+    const currentChar = card.querySelector(".build-char span")?.textContent.trim() ?? "";
 
     editBuildId.value = bid;
     editBuildNameInput.value = currentName;
     editBuildPlaystyleInput.value = currentPlaystyle;
+    for (let i = 0; i < editBuildCharacterInput.options.length; i++) {
+        console.log(editBuildCharacterInput.options[i], currentChar);
+        if (editBuildCharacterInput.options[i].text === currentChar) {
+          editBuildCharacterInput.selectedIndex = i;
+          break;
+        }
+    }
+
 
     editModal.classList.remove("hidden");
     editBuildNameInput.focus();
 }
 
-async function closeEditModal() {
+async function closeEditModal(event) {
     const modal = document.getElementById("editModal");
-    editModal.classList.add("hidden");
+    modal.classList.add("hidden");
 }
 
 async function openCreateBuildModal() {
@@ -304,6 +318,7 @@ window.onload = function() {
     populateDropdown('/relics/type/Feet', 'relicFeet');
     populateDropdown('/relics/type/Link%20Rope', 'relicLinkRope');
     populateDropdown('/relics/type/Planar%20Sphere', 'relicPlanarSphere');
+    populateDropdown('/builds/characters', 'editBuildCharacter');
     
 
 
