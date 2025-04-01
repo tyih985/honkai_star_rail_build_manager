@@ -150,29 +150,30 @@ router.get('/builds/lightcones', async (req, res) => {
     res.json({ data: tableContent });
 });
 
+// router.post('/characters/:searches', async (req, res) => {
+//     console.log('Received POST request');
+//     try {
+//         const searches = req.body.searches || [];
+//         console.log("Received searches:", searches);        
+//         const tableContent = await appService.searchCharacter(searches);
+//         res.json({ data: tableContent });
+//     } catch (error) {
+//         console.error("Error fetching characters:", error);
+//         res.status(500).json({ error: "Internal Server Error" });
+//     }
+// });
 
-router.get('/characters/:name', async (req, res) => {
-    const bid = decodeURIComponent(req.params.name);
-    const tableContent = await appService.searchCharacter(search);
-    res.json({data: tableContent});
-});
-
-router.get('/characters/:search', async (req, res) => {
-    const bid = decodeURIComponent(req.params.search);
-    const tableContent = await appService.searchCharacter(search);
-    res.json({data: tableContent});
-});
-
-router.get('/lightcones/:search', async (req, res) => {
-    const bid = decodeURIComponent(req.params.search);
-    const tableContent = await appService.searchLightCones(search);
-    res.json({data: tableContent});
-});
-
-router.get('/relics/:search', async (req, res) => {
-    const bid = decodeURIComponent(req.params.search);
-    const tableContent = await appService.searchRelics(search);
-    res.json({data: tableContent});
+router.post('/characters/:searches', async (req, res) => {
+    console.log('Received post request');
+    try {
+        const searches = req.body.searches || [];
+        console.log("Received searches:", searches);        
+        const tableContent = await appService.searchCharacter(searches);
+        res.json({ data: tableContent });
+    } catch (error) {
+        console.error("Error fetching characters:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 });
 
 router.post('/builds', async (req, res) => {

@@ -163,8 +163,19 @@ async function fetchAndDisplayCharacters() {
     const responseData = await response.json();
     const characters = responseData.data;
     console.log(characters);
-  
+
+    displayCharacters(characters)
+}
+
+// Displays character data
+async function displayCharacters(characters) {
+    console.log(characters)
     const container = document.getElementById("characters");
+
+    if (!characters || characters.length === 0) {
+        charactersContainer.innerHTML = "<p>No characters found.</p>";
+        return;
+    }
   
     characters.forEach(char => {
         const card = document.createElement("a");
@@ -187,8 +198,72 @@ async function fetchAndDisplayCharacters() {
 }
 
 
+// search functionality
+
+async function searchCharacters() {
+    const searches = [];
+    const searchRows = document.querySelectorAll(".filter-row");
+
+    searchRows.forEach((row) => {
+        const attribute = row.querySelector(".attribute").value;
+        const value = row.querySelector(".value").value.trim();
+        const conjunction = row.querySelector(".conjunction").value;
+
+        if (value) { // if value exists
+            searches.push({ attribute, value, conjunction });
+        }
+    });
+
+    if (searches.length === 0) {
+        alert("Please enter at least one filter condition.");
+        return;
+    }
+
+    console.log(searches)
+    console.log(JSON.stringify({ searches }))
+    
+    const response = await fetch('/characters/:search', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ searches })
+    })
+
+    const responseData = await response.json();
+    console.log(responseData);
 
 
+    // Display results in the UI
+    displayCharacters(responseData.data);
+}
+
+function addFilter() {
+    const filterContainer = document.getElementById("filters");
+    const filterRow = document.createElement("div");
+    filterRow.classList.add("div");
+    
+    filterRow.innerHTML = `
+      <div class="filter-row flex items-center space-x-4">
+        <select class="attribute border px-3 py-2 rounded">
+            <option value="name">Name</option>
+            <option value="element">Element</option>
+            <option value="rarity">Rarity</option>
+            <option value="path">Path</option>
+        </select>
+        
+        <p class="text-gray-500">=</p>
+        
+        <input type="text" class="value border px-3 py-2 rounded w-1/2" placeholder="Enter value" />
+        
+        <select class="conjunction border px-3 py-2 rounded">
+            <option value="">none</option>
+            <option value="AND">AND</option>
+            <option value="OR">OR</option>
+        </select>
+      </div>
+    `;
+    
+    filterContainer.appendChild(filterRow);
+}
 
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.

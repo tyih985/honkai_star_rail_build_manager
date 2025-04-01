@@ -361,7 +361,7 @@ async function searchCharacter(search) {
     return await withOracleDB(async (connection) => {
         try {
             const result = await connection.execute(
-                `SELECT * FROM Characters WHERE name LIKE %:search%`,
+                `SELECT * FROM Characters WHERE :attribute LIKE %:value%`,
                 { search },
                 { autoCommit: true }
             );
@@ -387,6 +387,89 @@ async function searchLightCones(search) {
         } catch (error) {
             console.error("Search Error:", error);
             return -1;
+        }
+    });
+}
+
+// async function searchCharacter(searches) {
+//     console.log('sql func')
+//     return await withOracleDB(async (connection) => {
+//         try {
+//             if (searches.length === 0) {
+//                 throw new Error("No searches provided");
+//             }
+
+//             // Constructing the WHERE clause dynamically
+//             const whereClauses = [];
+//             console.log(searches)
+
+//             searches.forEach(search => {
+//                 console.log(`${search.attribute}`)
+//                 console.log(`${search.value}`)
+//                 console.log(`${search.conjunction}`)
+                
+//                 whereClauses.push(`${search.attribute} LIKE '%${search.value}%' ${search.conjunction}`);
+//             });
+
+//             console.log(whereClauses)
+
+//             // Ensure the WHERE clauses are combined correctly, and prepend the WHERE keyword
+//             const query = `SELECT * FROM Characters WHERE ` + whereClauses.join(' ');
+
+//             console.log("Generated query:", query); // Log the final query for debugging
+
+//             const result = await connection.execute(query, { autoCommit: true });
+
+//             return result.rows;
+//         } catch (error) {
+//             console.error("Search Error:", error);
+//             return -1; // Return -1 to indicate an error in the search process
+//         }
+//     });
+// }
+
+
+async function searchCharacter(searches) {
+    console.log('sql func');
+    return await withOracleDB(async (connection) => {
+        try {
+            if (searches.length === 0) {
+                throw new Error("No searches provided");
+            }
+
+            // Constructing the WHERE clause dynamically
+            const whereClauses = [];
+            const bindParams = {}; // Object to store bind variables
+
+            console.log(searches);
+
+            searches.forEach((search, index) => {
+                console.log(`${search.attribute}`);
+                console.log(`${search.value}`);
+                console.log(`${search.conjunction}`);
+
+                // Generate a unique bind variable name for each search value
+                const bindVar = `:searchValue${index}`;
+                whereClauses.push(`${search.attribute} LIKE ${bindVar} ${search.conjunction}`);
+
+                // Add the bind parameter to the object
+                bindParams[bindVar] = `%${search.value}%`;
+            });
+
+            console.log(whereClauses);
+
+            // Ensure the WHERE clauses are combined correctly, and prepend the WHERE keyword
+            const query = `SELECT * FROM Characters WHERE ` + whereClauses.join(' ');
+
+            console.log("Generated query:", query); // Log the final query for debugging
+
+            // Execute the query with the bind parameters
+            const result = await connection.execute(query, bindParams, { autoCommit: true });
+
+            return result.rows;
+        } catch (error) {
+            console.error("Search Error:", error);
+            return -1; // Return -1 to indicate an error in the search process
         }
     });
 }
