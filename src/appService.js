@@ -259,11 +259,9 @@ async function fetchRelicsForType(type) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `
-            SELECT r.name, rd.set_name, r.rarity
-            FROM Relics r
-            JOIN RelicDetails rd ON r.name = rd.name
-            WHERE rd.relic_type = :type
-            ORDER BY r.rid
+            SELECT r.rid, rd.name
+            FROM RelicDetails rd, Relics r
+            WHERE rd.name = r.name AND rd.relic_type=:type
             `,
             [type]
         );

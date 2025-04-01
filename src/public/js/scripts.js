@@ -154,6 +154,10 @@ async function countDemotable() {
     }
 }
 
+// Converts character name to image file name
+function formatFileName(name) {
+    return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '') + '.png';
+  }
 
 // Fetches data from Characters table and displays it
 async function fetchAndDisplayCharacters() {
@@ -187,12 +191,18 @@ async function displayCharacters(characters) {
         const card = document.createElement("a");
         card.href = `character.html?name=${encodeURIComponent(char[0])}`;
         card.className = `
-            block bg-white rounded-xl shadow p-4 hover:shadow-md transition
+            group block bg-white rounded-xl shadow p-4 hover:shadow-md transition 
             hover:ring-1 hover:ring-indigo-400 cursor-pointer space-y-2
         `;
 
         card.innerHTML = `
-            <div class="w-full aspect-square bg-gray-200 rounded mb-2"></div>
+            <div class="relative w-full aspect-square rounded mb-4">
+                <img
+                src=assets/characters/${formatFileName(char[0])}
+                alt=${char[0]}
+                class="w-full h-full object-cover transition-transform duration-300 ease-in-out transform group-hover:scale-110"
+                />
+            </div>
             <h2 class="text-lg font-semibold">${char[0]}</h2>
             <p class="text-sm text-gray-600"><strong>Element:</strong> ${char[1]}</p>
             <p class="text-sm text-gray-600"><strong>Path:</strong> ${char[3]}</p>

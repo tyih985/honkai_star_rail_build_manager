@@ -1,25 +1,44 @@
+function formatFileName(name) {
+    return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '') + '.png';
+}
+
 async function fetchAndDisplayLightCones() {
     const displaySection = document.getElementById("light-cones");
     const selectedAttributes = Array.from(document.querySelectorAll('.attribute-toggle:checked')).map(cb => cb.value);
     displaySection.innerHTML = ""; 
     console.log(selectedAttributes);
     let lightCones = [];
-    if (selectedAttributes.length !== 0) {
-        const columns = selectedAttributes.join(", ");
-        const response = await fetch(`/lightcones?columns=${columns}`, {
-            method: 'GET'
-        });
-        const responseData = await response.json();
-        lightCones = formatLightCones(responseData.data, selectedAttributes);
+    let columns = "";
+
+    if (!selectedAttributes.includes("name")) {
+        columns += "name";
+        if (selectedAttributes.length > 0) columns += ", ";
     }
+    columns += selectedAttributes.join(", ");
+    
+    const response = await fetch(`/lightcones?columns=${columns}`, {
+        method: 'GET'
+    });
+    const responseData = await response.json();
+    lightCones = formatLightCones(responseData.data, columns.split(", "));
+    
+    console.log(lightCones);
   
     lightCones.forEach(lc => {
       const card = document.createElement("div");
       card.className = `
-        block bg-white rounded-xl shadow p-4 hover:shadow-md transition space-y-2
+        group block bg-white rounded-xl shadow p-4 hover:shadow-md transition space-y-2
       `;
   
-      let innerHTML = '';
+      let innerHTML = `
+        <div class="relative w-full aspect-square rounded mb-4">
+        <img
+            src="assets/light_cones/${formatFileName(lc.name)}"
+            alt="${lc.name}"
+            class="w-full h-full object-contain transition-transform duration-300 ease-in-out transform group-hover:scale-110"
+        />
+        </div>
+      `;
   
       selectedAttributes.forEach(attr => {
         if (attr === "name") {
