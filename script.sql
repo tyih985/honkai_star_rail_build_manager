@@ -285,12 +285,32 @@ insert into CharacterRelations(cid, name, cone_id) values
 -- insert into Builds(bid, name, playstyle, cid) values (3, 'Asta Support', 'Speed Support', 4);
 -- insert into Builds(bid, name, playstyle, cid) values (4, 'March build', 'Freeze Tank', 1);
 
--- Stats for March 7th (cid = 1)
+-- Stats 
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (15, 'HP', 1203, 0);
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (16, 'Attack', 601, 0);
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (17, 'Defense', 388, 0);
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (18, 'Speed', 102, 0);
+
 insert into Stats(sid, stat_type, stat_value, cid) values (10, 'HP', 1058, 1);
 insert into Stats(sid, stat_type, stat_value, cid) values (11, 'Attack', 511, 1);
 insert into Stats(sid, stat_type, stat_value, cid) values (12, 'Defense', 573, 1);
 insert into Stats(sid, stat_type, stat_value, cid) values (13, 'Speed', 101, 1);
-insert into Stats(sid, stat_type, stat_value, cid) values (14, 'Taunt', 150, 1);
+
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (20, 'HP', 882, 2);
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (21, 'Attack', 546, 2);
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (22, 'Defense', 396, 2);
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (23, 'Speed', 110, 2);
+
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (25, 'HP', 1047, 3);
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (26, 'Attack', 756, 3);
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (27, 'Defense', 436, 3);
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (28, 'Speed', 96, 3);
+
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (30, 'HP', 1023, 4);
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (31, 'Attack', 511, 4);
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (32, 'Defense', 463, 4);
+INSERT INTO Stats(sid, stat_type, stat_value, cid) VALUES (33, 'Speed', 106, 4);
+
 
 -- Abilities
 insert into Abilities(name, ability_type, ability_level, cid, description) values ('Frigid Cold Arrow', 'Single Target', 3, 1, 'Deals Ice DMG.');
