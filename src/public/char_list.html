@@ -38,6 +38,7 @@
           <input type="text" class="value border px-3 py-2 rounded w-1/2" placeholder="Enter value" />
 
           <select class="conjunction border px-3 py-2 rounded">
+              <option value="">none</option>
               <option value="AND">AND</option>
               <option value="OR">OR</option>
           </select>
@@ -50,57 +51,11 @@
       <button onclick="searchCharacters()" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">search</button>
     </div>
 
-
-  <script>
-      function addFilter() {
-          const filterContainer = document.getElementById("filters");
-          const filterRow = document.createElement("div");
-          filterRow.classList.add("filter-row");
-          
-          filterRow.innerHTML = `
-            <div class="filter-row flex items-center space-x-4">
-              <select class="attribute border px-3 py-2 rounded">
-                  <option value="name">Name</option>
-                  <option value="element">Element</option>
-                  <option value="rarity">Rarity</option>
-                  <option value="path">Path</option>
-              </select>
-              
-              <p class="text-gray-500">=</p>
-              
-              <input type="text" class="value border px-3 py-2 rounded w-1/2" placeholder="Enter value" />
-              
-              <select class="conjunction border px-3 py-2 rounded">
-                  <option value="AND">AND</option>
-                  <option value="OR">OR</option>
-              </select>
-            </div>
-          `;
-          
-          filterContainer.appendChild(filterRow);
-      }
-
-      function searchCharacters() {
-          const filters = [];
-          document.querySelectorAll(".filter-row").forEach(row => {
-              const attribute = row.querySelector(".attribute").value;
-              const value = row.querySelector(".value").value;
-              const conjunction = row.querySelector(".conjunction").value;
-              filters.push({ attribute, value, conjunction });
-          });
-          
-          console.log("Searching for:", filters);
-      }
-  </script>
-
     <!-- Character Grid -->
     <section id="characters" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       <!-- loaded from DB -->
     </section>
     <script src="js/scripts.js"></script>
-
-    
-
 
   </main>
 
