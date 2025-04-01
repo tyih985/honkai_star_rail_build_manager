@@ -223,7 +223,7 @@ async function searchCharacters() {
     searchRows.forEach((row) => {
         const attribute = row.querySelector(".attribute").value;
         const value = row.querySelector(".value").value.trim();
-        const conjunction = row.querySelector(".conjunction").value;
+        const conjunction = row.querySelector(".conjunction")?.value || "";
 
         if (value) { // if value exists
             searches.push({ attribute, value, conjunction });
@@ -260,6 +260,11 @@ function addFilter() {
     
     filterRow.innerHTML = `
       <div class="filter-row flex items-center space-x-4">
+        <select class="conjunction border px-3 py-2 rounded">
+            <option value="AND">AND</option>
+            <option value="OR">OR</option>
+        </select>
+
         <select class="attribute border px-3 py-2 rounded">
             <option value="name">Name</option>
             <option value="element">Element</option>
@@ -270,12 +275,6 @@ function addFilter() {
         <p class="text-gray-500">=</p>
         
         <input type="text" class="value border px-3 py-2 rounded w-1/2" placeholder="Enter value" />
-        
-        <select class="conjunction border px-3 py-2 rounded">
-            <option value="">none</option>
-            <option value="AND">AND</option>
-            <option value="OR">OR</option>
-        </select>
       </div>
     `;
     

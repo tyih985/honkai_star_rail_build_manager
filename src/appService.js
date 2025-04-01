@@ -376,7 +376,7 @@ async function searchCharacter(searches) {
 
                 // Generate a unique bind variable name for each search value
                 const bindVar = `:searchValue${index}`;
-                whereClauses.push(`${search.attribute} LIKE ${bindVar} ${search.conjunction}`);
+                whereClauses.push(`${search.conjunction} ${search.attribute} LIKE ${bindVar}`);
 
                 // Add the bind parameter to the object
                 bindParams[bindVar] = `%${search.value}%`;
