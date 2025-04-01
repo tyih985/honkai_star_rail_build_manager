@@ -419,82 +419,86 @@ async function searchRelics(search) {
 
 async function getBuildCountPerCharacter() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-          `SELECT c.name, COUNT(b.bid) AS build_count
-           FROM Characters c
-           JOIN CharacterRelations cr ON c.name = cr.name
-           LEFT JOIN Builds b ON cr.cid = b.cid
-           GROUP BY c.name`,
-          [],
-          { outFormat: oracledb.OUT_FORMAT_OBJECT }
-        );
-        return result.rows;
+      const result = await connection.execute(
+        `SELECT c.name AS NAME, c.element AS ELEMENT, c.rarity AS RARITY, c.path AS PATH,
+                COUNT(b.bid) AS BUILD_COUNT
+         FROM Characters c, CharacterRelations cr, Builds b
+         WHERE c.name = cr.name
+           AND cr.cid = b.cid
+         GROUP BY c.name, c.element, c.rarity, c.path`,
+        [],
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+      return result.rows;
     }).catch(() => []);
-}
-
-async function getCharactersWithMultipleSingleTargetAbilities() {
+  }
+  
+  async function getCharactersWithMultipleSingleTargetAbilities() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-          `SELECT cr.name, COUNT(a.name) AS single_target_count
-           FROM CharacterRelations cr
-           JOIN Abilities a ON cr.cid = a.cid
-           WHERE a.ability_type = 'Single Target'
-           GROUP BY cr.name
-           HAVING COUNT(a.name) > 1`,
-          [],
-          { outFormat: oracledb.OUT_FORMAT_OBJECT }
-        );
-        return result.rows;
+      const result = await connection.execute(
+        `SELECT c.NAME, c.ELEMENT, c.RARITY, c.PATH,
+                COUNT(DISTINCT a.name) AS SINGLE_TARGET_COUNT
+         FROM Characters c, CharacterRelations cr, Builds b, Abilities a
+         WHERE c.NAME = cr.NAME
+           AND cr.cid = b.cid
+           AND cr.cid = a.cid
+           AND a.ability_type = 'Single Target'
+         GROUP BY c.NAME, c.ELEMENT, c.RARITY, c.PATH
+         HAVING COUNT(a.name) > 1`,
+        [],
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+      return result.rows;
     }).catch(() => []);
-}
-
-async function getCharactersAboveAverageHP() {
+  }
+        
+  async function getCharactersAboveAverageHP() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-          `SELECT cr.name, s.stat_value AS HP
-           FROM CharacterRelations cr
-           JOIN Stats s ON cr.cid = s.cid
-           WHERE s.stat_type = 'HP'
-           GROUP BY cr.name, s.stat_value
-           HAVING s.stat_value > (
-             SELECT AVG(s2.stat_value)
-             FROM Stats s2
-             WHERE s2.stat_type = 'HP'
-           )`,
-          [],
-          { outFormat: oracledb.OUT_FORMAT_OBJECT }
-        );
-        return result.rows;
+      const result = await connection.execute(
+        `SELECT c.name AS NAME, c.element AS ELEMENT, c.rarity AS RARITY, c.path AS PATH,
+                s.stat_value AS HP
+         FROM Characters c, CharacterRelations cr, Builds b, Stats s
+         WHERE c.name = cr.name
+           AND cr.cid = b.cid
+           AND cr.cid = s.cid
+           AND s.stat_type = 'HP'
+         GROUP BY c.name, c.element, c.rarity, c.path, s.stat_value
+         HAVING s.stat_value > (
+           SELECT AVG(s2.stat_value)
+           FROM Stats s2
+           WHERE s2.stat_type = 'HP'
+         )`,
+        [],
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+      return result.rows;
     }).catch(() => []);
-}
-
-async function getCharactersWithFullLightConeCoverage() {
+  }
+  
+  async function getCharactersWithFullLightConeCoverage() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-          `SELECT cr.name
-           FROM CharacterRelations cr
-           WHERE cr.cid IN (
-             SELECT b.cid
-             FROM Builds b
+      const result = await connection.execute(
+        `SELECT c.name AS NAME, c.element AS ELEMENT, c.rarity AS RARITY, c.path AS PATH
+         FROM Characters c, CharacterRelations cr
+         WHERE c.name = cr.name
+           AND NOT EXISTS (
+             SELECT lc.cone_id
+             FROM LightCones lc
              WHERE NOT EXISTS (
-                   SELECT lc.cone_id
-                   FROM LightCones lc
-                   WHERE NOT EXISTS (
-                         SELECT 1
-                         FROM Builds_LightCones bl
-                         WHERE bl.bid = b.bid
-                           AND bl.cone_id = lc.cone_id
-                   )
+               SELECT 1
+               FROM Builds b, Builds_LightCones bl
+               WHERE b.bid = bl.bid
+                 AND b.cid = cr.cid
+                 AND bl.cone_id = lc.cone_id
              )
            )`,
-          [],
-          { outFormat: oracledb.OUT_FORMAT_OBJECT }
-        );
-        return result.rows;
+        [],
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+      return result.rows;
     }).catch(() => []);
-}
-
-
+  }
+        
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,

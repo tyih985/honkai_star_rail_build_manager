@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Honkai: Star Rail Build Manager - Insights</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 font-sans">
+  <!-- Navigation -->
+  <nav class="flex justify-end p-4 bg-white shadow-sm space-x-4 text-sm">
+    <a href="index.html" class="hover:underline">my builds</a>
+    <a href="#" class="font-semibold text-indigo-600">insights</a>
+    <a href="char_list.html" class="hover:underline">characters</a>
+    <a href="lc_list.html" class="hover:underline">light cones</a>
+    <a href="relics_list.html" class="hover:underline">relics</a>
+  </nav>
+
+  <main class="max-w-5xl mx-auto py-10 space-y-8">
+    <h1 class="text-2xl font-semibold">Insights</h1>
+
+    <div class="insight-section bg-white shadow rounded-lg p-6">
+      <h2 class="text-xl font-bold mb-4">Build Count per Character</h2>
+      <button id="runBuildCount" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">
+        Run Build Count
+      </button>
+      <div id="result-build-count" class="mt-4"></div>
+    </div>
+
+    <div class="insight-section bg-white shadow rounded-lg p-6">
+      <h2 class="text-xl font-bold mb-4">Characters That Have Builds With More Than 1 Single Target Skill</h2>
+      <button id="runSingleTarget" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">
+        Run Single Target Query
+      </button>
+      <div id="result-single-target" class="mt-4"></div>
+    </div>
+
+    <div class="insight-section bg-white shadow rounded-lg p-6">
+      <h2 class="text-xl font-bold mb-4">Characters Thave Have Builds With Above Average HP</h2>
+      <button id="runAboveAvgHp" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">
+        Run Above Avg HP
+      </button>
+      <div id="result-above-avg-hp" class="mt-4"></div>
+    </div>
+
+    <div class="insight-section bg-white shadow rounded-lg p-6">
+      <h2 class="text-xl font-bold mb-4">Characters That Have Builds for Every Light Cone</h2>
+      <button id="runFullLightCones" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">
+        Run Full Light Cone Query
+      </button>
+      <div id="result-full-lightcones" class="mt-4"></div>
+    </div>
+  </main>
+
+  <script src="js/insight.js"></script>
+</body>
+
+</html>
