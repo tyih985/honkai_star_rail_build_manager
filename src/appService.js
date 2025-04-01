@@ -186,7 +186,7 @@ async function fetchCharMaterialsFromDb(name) {
                                                                     FROM CharacterRelations
                                                                     WHERE name=:name)
         `, [name]);
-        return result.rows[0];
+        return result.rows;
     }).catch(() => {
         return [];
     });
