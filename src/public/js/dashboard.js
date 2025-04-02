@@ -1,3 +1,5 @@
+import { showToast } from "./general.js";
+
 async function fetchAndDisplayBuilds() {
     const response = await fetch('/builds', {
         method: 'GET'
@@ -239,47 +241,6 @@ async function windowListener(event) {
     }
 }
 
-function showToast(message, type = 'success') {
-    const toast = document.createElement('div');
-
-    const iconMap = {
-        success: '✅',
-        error: '❌'
-    };
-
-    const borderMap = {
-        success: 'border-green-500',
-        error: 'border-red-500'
-    };
-
-    toast.className = `
-      flex items-start gap-3 w-72 p-4 pr-5 bg-white rounded-lg border-l-4 shadow-md
-      ${borderMap[type] || borderMap.success}
-      transform transition-all duration-500 ease-out translate-x-96 opacity-0
-    `;
-
-    toast.innerHTML = `
-      <div class="text-xl">${iconMap[type] || '✅'}</div>
-      <div class="text-sm font-medium text-gray-800">${message}</div>
-    `;
-
-    const container = document.getElementById('toast-container');
-    container.appendChild(toast);
-
-    // Trigger animation
-    requestAnimationFrame(() => {
-        toast.classList.remove('translate-x-96', 'opacity-0');
-        toast.classList.add('translate-x-0', 'opacity-100');
-    });
-
-    // Auto-dismiss after 3s
-    setTimeout(() => {
-        toast.classList.remove('translate-x-0', 'opacity-100');
-        toast.classList.add('translate-x-96', 'opacity-0');
-        setTimeout(() => toast.remove(), 400); // remove after animation
-    }, 3000);
-}
-
 async function populateDropdown(endpoint, selectElementId) {
     try {
         const response = await fetch(endpoint);
@@ -319,14 +280,6 @@ window.onload = function() {
     populateDropdown('/relics/type/Link%20Rope', 'relicLinkRope');
     populateDropdown('/relics/type/Planar%20Sphere', 'relicPlanarSphere');
     populateDropdown('/builds/characters', 'editBuildCharacter');
-    
-
-
-    // document.getElementById("insertBuild").addEventListener("submit",  )
-    // document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
-    // document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
-    // document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
-    // document.getElementById("countDemotable").addEventListener("click", countDemotable);
 };
 
 

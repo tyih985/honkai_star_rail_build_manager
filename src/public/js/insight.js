@@ -1,7 +1,4 @@
-function formatFileName(name) {
-  if (!name) return "default.png";
-  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '') + '.png';
-}
+import { formatFileName } from "./general.js";
 
 const fieldNames = {
   "BUILD_COUNT": "Number of Builds",

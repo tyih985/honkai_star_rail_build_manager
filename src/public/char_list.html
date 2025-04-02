@@ -13,7 +13,7 @@
   <!-- Navigation -->
   <nav class="flex justify-end p-4 bg-white shadow-sm space-x-4 text-sm">
     <a href="index.html" class="hover:underline">my builds</a>
-    <a href="insights.html" class="hover:underline">aggregates</a>
+    <a href="insights.html" class="hover:underline">insights</a>
     <a href="#" class="font-semibold text-indigo-600">characters</a>
     <a href="lc_list.html" class="hover:underline">light cones</a>
     <a href="relics_list.html" class="hover:underline">relics</a>
@@ -43,17 +43,18 @@
 
     <!-- Filter Buttons -->
     <div class="flex space-x-4">
-      <button onclick="addFilter()" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">add filter</button>
-      <button onclick="removeFilters()" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">remove filter</button>
-      <button onclick="clearFilters()" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">clear filters</button>
-      <button onclick="searchCharacters()" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">search</button>
+      <button id="add-filters" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">add filter</button>
+      <button id="clear-filters" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">clear filters</button>
+      <button id="search-characters" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow">search</button>
     </div>
 
     <!-- Character Grid -->
     <section id="characters" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       <!-- loaded from DB -->
     </section>
-    <script src="js/scripts.js"></script>
+
+    <div id="toast-container" class="fixed top-6 right-6 z-50 flex flex-col space-y-2"></div>
+    <script type="module" src="js/scripts.js"></script>
 
   </main>
 

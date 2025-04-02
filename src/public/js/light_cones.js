@@ -1,6 +1,4 @@
-function formatFileName(name) {
-    return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '') + '.png';
-}
+import { formatFileName } from "./general.js";
 
 async function fetchAndDisplayLightCones() {
     const displaySection = document.getElementById("light-cones");
