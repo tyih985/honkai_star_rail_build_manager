@@ -708,3 +708,12 @@ insert into LightCones_Materials(cone_id, mid) values (1, 10);
 insert into LightCones_Materials(cone_id, mid) values (0, 105);
 insert into LightCones_Materials(cone_id, mid) values (2, 0);
 insert into LightCones_Materials(cone_id, mid) values (3, 0);
+
+-- Relics_Materials
+insert into Relics_Materials(rid, mid) values (0, 5);
+insert into Relics_Materials(rid, mid) values (1, 5);
+insert into Relics_Materials(rid, mid) values (1, 106);
+insert into Relics_Materials(rid, mid) values (2, 5);
+insert into Relics_Materials(rid, mid) values (3, 106);
+insert into Relics_Materials(rid, mid) values (4, 5);
+
