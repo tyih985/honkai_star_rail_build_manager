@@ -444,7 +444,7 @@ async function getBuildCountPerCharacter() {
            AND cr.cid = a.cid
            AND a.ability_type = 'Single Target'
          GROUP BY c.NAME, c.ELEMENT, c.RARITY, c.PATH
-         HAVING COUNT(a.name) > 1`,
+         HAVING COUNT(DISTINCT a.name) > 1`,
         [],
         { outFormat: oracledb.OUT_FORMAT_OBJECT }
       );
