@@ -5,7 +5,6 @@ drop table Abilities_Materials;
 drop table Characters_Materials;
 drop table Characters_Consumables;
 drop table Builds_Relics;
-drop table Builds_LightCones;
 drop table Relics;
 drop table RelicDetails;
 drop table RelicSet;
@@ -64,8 +63,10 @@ create table Builds (
     name varchar2(100) unique,
     playstyle varchar2(100),
     cid number not null,
+    cone_id number not null,
     primary key (bid),
-    foreign key (cid) references CharacterRelations on delete cascade
+    foreign key (cid) references CharacterRelations,
+    foreign key (cone_id) references LightCones 
 );
 
 create sequence build_seq
@@ -177,14 +178,6 @@ create table Relics (
     rarity number,
     primary key (rid),
     foreign key (name) references RelicDetails on delete cascade
-);
-
-create table Builds_LightCones (
-    bid number,
-    cone_id number,
-    primary key (bid, cone_id),
-    foreign key (bid) references Builds on delete cascade,
-    foreign key (cone_id) references LightCones
 );
 
 create table Builds_Relics (
@@ -308,24 +301,25 @@ insert into CharacterRelations(cid, name, cone_id) values
     (8, 'Clara', NULL);
 
 -- Builds
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'Destruction MC DPS', 'Crit DPS', 0);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'Himeko PF', 'Break Support', 3);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'Dan Heng Build', 'Speed DPS', 2);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'Asta Support', 'Speed Support', 4);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'March build', 'Freeze Tank', 1);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'Jingliu Test', 'HP Drain', 5);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'JY Build 1', 'Playstyle 1', 6);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'JY Build 2', 'Playstyle 2', 6);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'JY Build 3', 'Playstyle 3', 6);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'JY Build 4', 'Playstyle 4', 6);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'JY Build 5', 'Playstyle 5', 6);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'JY Build 6', 'Different Relics', 6);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'JY Build 7', 'Test build', 6);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'JY Build 8', 'Playstyle 6', 6);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'JY Build 9', 'SPD Focus', 6);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'JY Build 10', 'Crit DPS', 6);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'JY Build 11', 'Crit Focus', 6);
-insert into Builds(bid, name, playstyle, cid) values (build_seq.nextval, 'Himeko MoC', 'Follow-up DPS', 3);
+
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'Destruction MC DPS', 'Crit DPS', 0, 0);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'Himeko PF', 'Break Support', 3, 3);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'Dan Heng Build', 'Speed DPS', 2, 2);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'Asta Support', 'Speed Support', 4, 4);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'March build', 'Freeze Tank', 1, 1);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'Jingliu Test', 'HP Drain', 5, 2);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'JY Build 1', 'Playstyle 1', 6, 0);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'JY Build 2', 'Playstyle 2', 6, 1);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'JY Build 3', 'Playstyle 3', 6, 2);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'JY Build 4', 'Playstyle 4', 6, 3);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'JY Build 5', 'Playstyle 5', 6, 4);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'JY Build 6', 'Different Relics', 6, 5);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'JY Build 7', 'Test build', 6, 6);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'JY Build 8', 'Playstyle 6', 6, 7);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'JY Build 9', 'SPD Focus', 6, 8);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'JY Build 10', 'Crit DPS', 6, 9);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'JY Build 11', 'Crit Focus', 6, 10);
+insert into Builds(bid, name, playstyle, cid, cone_id) values (build_seq.nextval, 'Himeko MoC', 'Follow-up DPS', 3, 4);
 
 
 
@@ -634,33 +628,6 @@ insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (5, 1, 'HP', '
 insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (4, 2, 'SPD, DEF%', 'Effect Hit Rate, DEF%, SPD, HP%');
 insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (1, 3, 'ATK%', 'CRIT Rate, CRIT DMG, SPD');
 insert into Builds_Relics(bid, rid, rec_main, rec_substat) values (2, 4, 'ATK%', 'CRIT Rate, CRIT DMG, ATK%, SPD');
-
-
--- Builds_LightCones
-
-insert into Builds_LightCones(bid, cone_id) values (1, 0);
-insert into Builds_LightCones(bid, cone_id) values (2, 3);
-insert into Builds_LightCones(bid, cone_id) values (3, 2);
-insert into Builds_LightCones(bid, cone_id) values (4, 4);
-insert into Builds_LightCones(bid, cone_id) values (5, 1);
-insert into Builds_LightCones(bid, cone_id) values (6, 2);
-
-insert into Builds_LightCones(bid, cone_id) values (7, 0);
-insert into Builds_LightCones(bid, cone_id) values (8, 1);
-insert into Builds_LightCones(bid, cone_id) values (9, 2);
-insert into Builds_LightCones(bid, cone_id) values (10, 3);
-insert into Builds_LightCones(bid, cone_id) values (11, 4);
-insert into Builds_LightCones(bid, cone_id) values (12, 5);
-insert into Builds_LightCones(bid, cone_id) values (13, 6);
-insert into Builds_LightCones(bid, cone_id) values (14, 7);
-insert into Builds_LightCones(bid, cone_id) values (15, 8);
-insert into Builds_LightCones(bid, cone_id) values (16, 9);
-insert into Builds_LightCones(bid, cone_id) values (17, 10);
-
-
-insert into Builds_LightCones(bid, cone_id) values (18, 4);
-
-
 
 -- Characters_Consumables
 insert into Characters_Consumables(name, cid) values ('Alfalfa Salad', 0);
