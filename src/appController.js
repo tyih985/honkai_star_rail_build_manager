@@ -131,8 +131,8 @@ router.delete('/builds/:bid', async (req, res) => {
 
 router.put('/builds/:bid', async (req, res) => {
     const bid = decodeURIComponent(req.params.bid);
-    const { name, playstyle, cid } = req.body;
-    const updateResult = await appService.updateBuild(bid, name, playstyle, cid);
+    const { name, playstyle, cid, cone_id } = req.body;
+    const updateResult = await appService.updateBuild(bid, name, playstyle, cid, cone_id);
     if (updateResult) {
         res.json({ success: true });
     } else {

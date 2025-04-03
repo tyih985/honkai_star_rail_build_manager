@@ -23,7 +23,7 @@ async function fetchAndDisplayBuilds() {
 function renderBuildCard([ bid, name, character, lightCone, playstyle ]) {
     const wrapper = document.createElement('div');
     wrapper.className = "build-card relative bg-white shadow-md rounded-lg p-6 border border-gray-200 hover:shadow-lg transition";
-    wrapper.dataset.bid = bid; // ✅ make sure it's on the wrapper
+    wrapper.dataset.bid = bid;
 
     wrapper.innerHTML = `
       <div class="flex justify-between items-start mb-4">
@@ -32,7 +32,7 @@ function renderBuildCard([ bid, name, character, lightCone, playstyle ]) {
           <p class="build-char text-sm text-gray-500">
             Character: <span class="font-medium text-gray-700">${character}</span>
           </p>
-          <p class="text-sm text-gray-500">
+          <p class="build-lightcone text-sm text-gray-500">
             Light Cone: <span class="font-medium text-gray-700">${lightCone}</span>
           </p>
           <p class="build-playstyle text-sm text-gray-500">
@@ -150,10 +150,12 @@ async function updateBuild(event) {
     const editBuildPlaystyleInput = document.getElementById("editBuildPlaystyle");
     const editBuildId = document.getElementById("editBuildId");
     const editBuildCharacterInput = document.getElementById("editBuildCharacter");
+    const editBuildLightconeInput = document.getElementById("editBuildLightcone");
     const bid = editBuildId.value;
     const newName = editBuildNameInput.value.trim();
     const newPlaystyle = editBuildPlaystyleInput.value.trim();
     const newChar = editBuildCharacterInput.value;
+    const newLightcone = editBuildLightconeInput.value;
     if (!newName) {
         // do something
     }
@@ -165,7 +167,8 @@ async function updateBuild(event) {
             body: JSON.stringify({
                 name: newName,
                 playstyle: newPlaystyle,
-                cid: newChar
+                cid: newChar,
+                cone_id: newLightcone
             })
         });
 
@@ -179,6 +182,7 @@ async function updateBuild(event) {
         card.querySelector("h3").textContent = newName;
         card.querySelector(".build-playstyle span").textContent = newPlaystyle;
         card.querySelector(".build-char span").textContent = editBuildCharacterInput.options[editBuildCharacterInput.selectedIndex].text
+        card.querySelector(".build-lightcone span").textContent = editBuildLightconeInput.options[editBuildLightconeInput.selectedIndex].text;
 
         showToast("Build edited successfully.", "success");
         closeEditModal();
@@ -192,6 +196,7 @@ async function openEditModal(event) {
     const editBuildNameInput = document.getElementById("editBuildName");
     const editBuildPlaystyleInput = document.getElementById("editBuildPlaystyle");
     const editBuildCharacterInput = document.getElementById("editBuildCharacter");
+    const editBuildLightconeInput = document.getElementById("editBuildLightcone")
     const editBuildId = document.getElementById("editBuildId");
 
     const card = event.target.closest(".build-card");
@@ -199,6 +204,7 @@ async function openEditModal(event) {
     const currentName = card.querySelector(".build-title")?.textContent ?? "";
     const currentPlaystyle = card.querySelector(".build-playstyle span")?.textContent.trim() ?? "";
     const currentChar = card.querySelector(".build-char span")?.textContent.trim() ?? "";
+    const currentLightcone = card.querySelector(".build-lightcone span")?.textContent.trim() ?? "";
 
     editBuildId.value = bid;
     editBuildNameInput.value = currentName;
@@ -210,8 +216,13 @@ async function openEditModal(event) {
           break;
         }
     }
-
-
+    for (let i = 0; i < editBuildLightconeInput.options.length; i++) {
+        if (editBuildLightconeInput.options[i].text === currentLightcone) {
+          editBuildLightconeInput.selectedIndex = i;
+          break;
+        }
+    }
+    
     editModal.classList.remove("hidden");
     editBuildNameInput.focus();
 }
@@ -280,6 +291,7 @@ window.onload = function() {
     populateDropdown('/relics/type/Link%20Rope', 'relicLinkRope');
     populateDropdown('/relics/type/Planar%20Sphere', 'relicPlanarSphere');
     populateDropdown('/builds/characters', 'editBuildCharacter');
+    populateDropdown('/builds/lightcones', 'editBuildLightcone');
 };
 
 

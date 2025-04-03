@@ -195,9 +195,9 @@ async function fetchCharMaterialsFromDb(name) {
 async function fetchBuildsDetailsFromDb() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
-            SELECT b.bid, b.name, cr.name, lc.name, b.playstyle
-            FROM Builds b, CharacterRelations cr, Builds_LightCones blc, LightCones lc
-            WHERE b.cid = cr.cid AND blc.bid = b.bid AND blc.cone_id = lc.cone_id
+            SELECT b.bid, b.name, cr.name, lc.name AS lc_name, b.playstyle
+            FROM Builds b, CharacterRelations cr, LightCones lc
+            WHERE b.cid = cr.cid AND b.cone_id = lc.cone_id
         `);
         return result.rows;
     }).catch(() => {
@@ -275,28 +275,22 @@ async function fetchRelicsForType(type) {
 
 async function insertBuild(b_name, playstyle, cid, cone_id, ridData) {
     return await withOracleDB(async (connection) => {
-        // Use the build_seq to generate a new bid and return it
+        // Insert into Builds
         const buildResult = await connection.execute(
-            `INSERT INTO Builds (bid, name, playstyle, cid) 
-             VALUES (build_seq.nextval, :name, :playstyle, :cid)
+            `INSERT INTO Builds (bid, name, playstyle, cid, cone_id) 
+             VALUES (build_seq.nextval, :name, :playstyle, :cid, :cone_id)
              RETURNING bid INTO :bid_out`,
             {
                 name: b_name,
                 playstyle: playstyle,
                 cid: cid,
+                cone_id: cone_id,
                 bid_out: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
             },
             { autoCommit: false }
         );
         // Retrieve the generated bid from the OUT binding
         const newBid = buildResult.outBinds.bid_out[0];
-
-        // Insert into Builds_LightCones using the new bid
-        const buildLightConeResult = await connection.execute(
-            `INSERT INTO Builds_LightCones (bid, cone_id) VALUES (:bid, :cone_id)`,
-            { bid: newBid, cone_id: cone_id },
-            { autoCommit: false }
-        );
 
         // Insert into Builds_Relics for each relic slot
         let buildRelicResults = [];
@@ -315,7 +309,6 @@ async function insertBuild(b_name, playstyle, cid, cone_id, ridData) {
         const relicsSuccess = buildRelicResults.every(r => r.rowsAffected > 0);
         return (
             buildResult.rowsAffected > 0 &&
-            buildLightConeResult.rowsAffected > 0 &&
             relicsSuccess
         );
     }).catch((err) => {
@@ -324,11 +317,13 @@ async function insertBuild(b_name, playstyle, cid, cone_id, ridData) {
     });
 }
 
-async function updateBuild(bid, newName, newPlaystyle, newCid) {
+async function updateBuild(bid, newName, newPlaystyle, newCid, newCone_id) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `UPDATE Builds SET name=:newName, playstyle=:newPlaystyle, cid=:newCid WHERE bid=:bid`,
-            [newName, newPlaystyle, newCid, bid],
+            `UPDATE Builds 
+             SET name = :newName, playstyle = :newPlaystyle, cid = :newCid, cone_id = :newCone_id 
+             WHERE bid = :bid`,
+            [newName, newPlaystyle, newCid, newCone_id, bid],
             { autoCommit: true }
         );
 
