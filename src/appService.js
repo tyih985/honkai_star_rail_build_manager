@@ -481,10 +481,9 @@ async function getBuildCountPerCharacter() {
              FROM LightCones lc
              WHERE NOT EXISTS (
                SELECT 1
-               FROM Builds b, Builds_LightCones bl
-               WHERE b.bid = bl.bid
+               FROM Builds b
+               WHERE b.cone_id = lc.cone_id
                  AND b.cid = cr.cid
-                 AND bl.cone_id = lc.cone_id
              )
            )`,
         [],
